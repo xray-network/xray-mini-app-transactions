@@ -1,0 +1,9 @@
+@import "@/styles/tailwind.css";
+
+.shared-btn-outline {
+  @apply !bg-transparent;
+}
+
+.shared-btn-transparent {
+  @apply !bg-transparent !border-transparent !shadow-none;
+}

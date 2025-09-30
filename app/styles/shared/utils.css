@@ -1,0 +1,9 @@
+@import "@/styles/tailwind.css";
+
+.shared-utils-inverse-on-light {
+  filter: invert(0);
+}
+
+[data-theme="dark"] .shared-utils-inverse-on-dark {
+  filter: invert(1);
+}

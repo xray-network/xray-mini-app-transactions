@@ -1,0 +1,17 @@
+{
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "name": "XRAY/Transactions",
+  "short_name": "XRAY/Transactions",
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

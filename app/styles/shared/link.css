@@ -1,0 +1,7 @@
+@import "@/styles/tailwind.css";
+
+a,
+.shared-link {
+  @apply decoration-0 text-blue-500 transition-colors;
+  @apply hover:text-blue-400;
+}

@@ -1,0 +1,9 @@
+@import "@/styles/tailwind.css";
+
+.ant-notification-notice-message {
+  @apply font-bold !text-base;
+}
+
+.ant-notification-notice-description {
+  @apply !text-sm;
+}

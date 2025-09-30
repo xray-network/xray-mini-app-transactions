@@ -1,0 +1,47 @@
+@import "@/styles/tailwind.css";
+
+.shared-tabs-link {
+  .ant-tabs-tab {
+    @apply p-0;
+
+    a {
+      @apply block py-3 text-black font-medium;
+      @apply hover:!text-gray-500;
+      @apply focus:active:!text-gray-500;
+      @apply dark:!text-white;
+      @apply dark:hover:!text-gray-400;
+    }
+  }
+
+  .ant-tabs-tab-active {
+    a {
+      @apply text-blue-500;
+      @apply hover:!text-blue-500;
+      @apply dark:hover:!text-white;
+      text-shadow: none !important;
+    }
+  }
+}
+
+.shared-tabs-btn {
+  .ant-tabs-tab {
+    @apply p-0;
+
+    .ant-tabs-tab-btn {
+      @apply block py-2 text-black font-medium text-lg;
+      @apply hover:!text-gray-500;
+      @apply focus:active:!text-gray-500;
+      @apply dark:!text-white;
+      @apply dark:hover:!text-gray-400;
+    }
+  }
+
+  .ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      @apply text-blue-500;
+      @apply hover:!text-blue-500;
+      @apply dark:hover:!text-white;
+      text-shadow: none !important;
+    }
+  }
+}

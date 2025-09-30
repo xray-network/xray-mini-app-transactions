@@ -1,0 +1,85 @@
+@import "@/styles/tailwind.css";
+
+.shared-table {
+  white-space: nowrap;
+  overflow-y: auto;
+
+  .ant-pagination-total-text {
+    margin-right: auto !important;
+    padding-left: 0.5rem !important;
+  }
+}
+
+.shared-table-custom {
+  .ant-pagination-total-text {
+    margin-right: auto !important;
+    padding-left: 0.5rem !important;
+  }
+
+  table {
+    border-spacing: 0rem 0.5rem;
+  }
+
+  thead {
+    tr {
+      th {
+        background: none !important;
+        border: none !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      cursor: pointer;
+      border-radius: 2rem;
+      margin-bottom: 0.5rem;
+      border: 0 !important;
+
+      td {
+        border: 0 !important;
+        background: var(--color-td) !important;
+      }
+
+      td.ant-table-column-sort {
+        background: var(--color-td-hover) !important;
+      }
+
+      &:hover {
+        td {
+          background: var(--color-td-hover) !important;
+        }
+      }
+
+      td:first-child {
+        border-top-left-radius: 2rem;
+        border-bottom-left-radius: 2rem;
+      }
+
+      td:last-child {
+        border-top-right-radius: 2rem;
+        border-bottom-right-radius: 2rem;
+      }
+    }
+  }
+}
+
+[data-theme="dark"] .shared-table-custom {
+  tbody {
+    tr {
+      td {
+        background: var(--color-td-dark) !important;
+      }
+
+      td.ant-table-column-sort {
+        background: var(--color-td-dark-hover) !important;
+      }
+
+      &:hover {
+        td {
+          background: var(--color-td-dark-hover) !important;
+        }
+      }
+    }
+  }
+}

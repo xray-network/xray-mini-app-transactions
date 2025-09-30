@@ -1,0 +1,10 @@
+@import "@/styles/tailwind.css";
+
+.shared-spinner {
+  @apply inline-block !m-0 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full !w-[2rem] !h-[2rem] animate-spin [animation-duration:0.5s];
+  @apply dark:border-gray-800 dark:border-t-blue-500;
+}
+
+.shared-spinner.shared-spinner-centered {
+  @apply absolute top-[50%] left-[50%] translate-x-[-1rem] translate-y-[-1rem];
+}

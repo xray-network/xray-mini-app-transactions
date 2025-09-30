@@ -1,0 +1,27 @@
+@import "@/styles/tailwind.css";
+
+.ant-modal {
+  @media (width < 768px) {
+    @apply py-1;
+    top: 0 !important;
+    max-width: calc(100% - 1.5rem) !important;
+  }
+}
+
+.ant-modal-header {
+  @apply !bg-transparent !mb-5 !text-3xl;
+}
+
+.ant-modal-title {
+  @apply !text-2xl;
+}
+
+.ant-modal-close {
+  left: 1rem;
+  right: auto;
+}
+
+.ant-modal-content {
+  @apply !border-0 !pt-15;
+  @apply dark:!border-gray-700;
+}

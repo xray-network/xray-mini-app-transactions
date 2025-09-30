@@ -1,0 +1,17 @@
+@import "@/styles/tailwind.css";
+
+.logo {
+  @apply inline-flex items-center grow-0 text-2xl font-black;
+
+  svg {
+    @apply w-36;
+
+    g {
+      @apply fill-black dark:fill-white;
+    }
+  }
+
+  span {
+    @apply ms-3;
+  }
+}

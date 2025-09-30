@@ -1,0 +1,8 @@
+@import "@/styles/tailwind.css";
+
+.shared-countdown .ant-statistic,
+.shared-countdown .ant-statistic-content {
+  color: inherit;
+  font-size: inherit;
+  display: inline;
+}

@@ -1,0 +1,5 @@
+@import "@/styles/tailwind.css";
+
+.shared-input-outline {
+  @apply bg-transparent border-2 border-blue-500 rounded-full;
+}

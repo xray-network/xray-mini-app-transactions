@@ -1,0 +1,29 @@
+@import "@/styles/tailwind.css";
+
+.dropdown {
+  @apply p-3 rounded-lg bg-white dark:bg-gray-800;
+  box-shadow:
+    0 0.38rem 1rem 0 rgba(0, 0, 0, 0.08),
+    0 0.19rem 0.38rem -0.25rem rgba(0, 0, 0, 0.12),
+    0 0.56rem 1.75rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.dropdownSelector {
+  @apply relative z-10 h-10 px-2 border border-gray-200 dark:border-gray-800 flex rounded-lg items-center justify-center transition-colors duration-300 ease-in-out cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-blue-500;
+}
+
+.dropdownSelectorActive {
+  @apply absolute top-1 right-1 z-20 w-2 h-2 rounded-full bg-green-500;
+}
+
+.dropdownTitle {
+  @apply font-bold text-sm px-3 py-2;
+}
+
+.dropdownItem {
+  @apply px-3 py-2;
+}
+
+.dropdownDivider {
+  @apply border-b border-dashed border-gray-200 dark:border-gray-700 my-2;
+}

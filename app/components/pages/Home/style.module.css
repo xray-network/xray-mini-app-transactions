@@ -1,17 +1,49 @@
 @import "@/styles/tailwind.css";
 
-.logo {
-  @apply inline-flex items-center grow-0 text-2xl font-black;
+.head {
+  @apply flex items-center;
+}
 
-  svg {
-    @apply w-36;
+.headIcon {
+  @apply mr-4 flex-shrink-0 w-11 h-11 bg-gray-200 text-white text-lg flex items-center justify-center rounded-full self-start;
+}
 
-    g {
-      @apply fill-black dark:fill-white;
+.headIconSend {
+  @apply bg-red-500;
+}
+
+.headIconReceive {
+  @apply bg-green-500;
+}
+
+.headIconInternal {
+  @apply bg-gray-200 text-black;
+  @apply dark:bg-gray-900 dark:text-white;
+}
+
+.headInfo {
+  @apply grow min-w-25 self-start;
+}
+
+.headAssets {
+  @apply grow-2 flex flex-col items-end;
+}
+
+.collapse {
+  :global(.ant-collapse-header) {
+    @apply py-4! px-0! text-black!;
+    @apply dark:text-white!;
+  }
+
+  :global(.ant-collapse-item) {
+    @apply border-t-1! border-dashed border-gray-300 dark:border-gray-800! rounded-none!;
+
+    &:last-child {
+      @apply border-b-1! border-dashed! border-gray-300! dark:border-gray-800!;
     }
   }
 
-  span {
-    @apply ms-3;
+  :global(.ant-collapse-content-box) {
+    @apply pt-2 pb-5! px-0! md:pl-0!;
   }
 }

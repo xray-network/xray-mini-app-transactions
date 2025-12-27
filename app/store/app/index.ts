@@ -1,6 +1,5 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { useWeb3Store } from "@/store/web3"
 import * as config from "@/config"
 import * as Types from "@/types"
 
@@ -10,7 +9,6 @@ interface AppStoreState {
   theme: Types.App.Theme
   initTheme: () => void
   changeTheme: (theme: Types.App.ThemePrefer) => void
-
 
   // Settings
   currency: Types.App.Currencies
@@ -22,15 +20,19 @@ interface AppStoreState {
 
   // Tip
   tip: Types.CW3Types.Tip | null
-  updateTip: () => Promise<void>
+  updateTip: (tip: Types.CW3Types.Tip | null) => Promise<void>
 
   // Network
   network: Types.CW3Types.NetworkName | null
   networkSet: (network: Types.CW3Types.NetworkName) => void
+
+  // Account State
+  accountState: Types.SDK.HostAccountStatePayload["accountState"] | null
+  accountStateSet: (accountState: Types.SDK.HostAccountStatePayload["accountState"] | null) => void
 }
 
 const getSystemTheme = (): Types.App.Theme => {
-  if (typeof window === "undefined") return "light" // fallback for SSR
+  if (typeof window === "undefined") return "dark" // fallback for SSR
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 }
 
@@ -50,7 +52,6 @@ export const useAppStore = create<AppStoreState>()(
         set({ theme: themeCurrent, themePrefer: themePrefer })
       },
 
-
       // Settings
       currency: "usd",
       currencySet: (currency) => set({ currency }),
@@ -61,8 +62,7 @@ export const useAppStore = create<AppStoreState>()(
 
       // Tip
       tip: null,
-      updateTip: async () => {
-        const tip = (await useWeb3Store.getState().web3?.getTip()) || null
+      updateTip: async (tip) => {
         set({ tip })
       },
 
@@ -71,6 +71,10 @@ export const useAppStore = create<AppStoreState>()(
       networkSet: (network) => {
         set({ network })
       },
+
+      // Account State
+      accountState: null,
+      accountStateSet: (accountState) => set({ accountState }),
     }),
     // Persist configuration
     {

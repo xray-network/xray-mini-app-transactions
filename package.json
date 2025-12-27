@@ -21,7 +21,7 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "react-router dev --host",
+    "dev": "react-router dev --host --port 10003",
     "build": "react-router build",
     "deploy": "yarn build && wrangler pages deploy",
     "serve": "serve build/client/ -s",
@@ -39,6 +39,8 @@
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "antd": "^5.27.3",
+    "buffer": "^6.0.3",
+    "cardano-koios-client": "^1.0.12",
     "cardano-web3-js": "^2.3.4",
     "date-fns": "^4.1.0",
     "isbot": "^5.1.27",
@@ -53,6 +55,8 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-plugin-wasm": "^3.5.0",
     "wrangler": "^4.19.1",
+    "xray-mini-app-sdk": "^0.1.4",
+    "xray-mini-app-sdk-react": "^0.1.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

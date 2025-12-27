@@ -1,0 +1,9 @@
+@import "@/styles/tailwind.css";
+
+.shared-box {
+  @apply ps-3 rounded-2xl bg-gray-200 dark:bg-gray-900;
+}
+
+.shared-box-inner {
+  @apply p-4 rounded-2xl bg-white dark:bg-black;
+}

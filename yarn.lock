@@ -2040,6 +2040,13 @@ cardano-koios-client@^1.0.10:
   dependencies:
     openapi-fetch "^0.13.3"
 
+cardano-koios-client@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/cardano-koios-client/-/cardano-koios-client-1.0.12.tgz#a8fc3c6322a650aeddca2c7bbb6403add060c695"
+  integrity sha512-uBQx6A3KZkJm4bMleL73JS3jLg9KsfDSXk/x4MTF+UdT1IAFXwwOZc0uoEsCUmXh9opbxwlFNQezdfaEoavFSg==
+  dependencies:
+    openapi-fetch "^0.13.3"
+
 cardano-kupo-client@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cardano-kupo-client/-/cardano-kupo-client-1.0.1.tgz#caaeea2409cdddad7c44263af5c47da495f0d0ae"
@@ -4442,6 +4449,18 @@ ws@8.18.0:
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
+
+xray-mini-app-sdk-react@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xray-mini-app-sdk-react/-/xray-mini-app-sdk-react-0.1.4.tgz#312a462d2963d628f0eb4ea931505ead67590053"
+  integrity sha512-yerLaluI9rNXiBifhnpad6WigAP7nQ4ME/R+ZO+EuOHy8NRNu5Hpm/LfLFhDbSCDY1z/SZQlwdsktXUUp68kyg==
+  dependencies:
+    xray-mini-app-sdk "0.1.4"
+
+xray-mini-app-sdk@0.1.4, xray-mini-app-sdk@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xray-mini-app-sdk/-/xray-mini-app-sdk-0.1.4.tgz#e416fb142ba37226a8dad0157b2657e09ae1c8fd"
+  integrity sha512-IKzvNodN/eQEO5GY7QfReTk+Mub1XeOd5PVsjx2l1v6l8JFgt1JidLrLZ4wEndAiAsJAozShsA6CG8YO01aJWg==
 
 yallist@^3.0.2:
   version "3.1.1"

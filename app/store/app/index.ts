@@ -6,8 +6,6 @@ import * as Types from "@/types"
 interface AppStoreState {
   // Theme
   themePrefer: Types.App.ThemePrefer
-  theme: Types.App.Theme
-  initTheme: () => void
   changeTheme: (theme: Types.App.ThemePrefer) => void
 
   // Settings
@@ -27,30 +25,16 @@ interface AppStoreState {
   networkSet: (network: Types.CW3Types.NetworkName) => void
 
   // Account State
-  accountState: Types.SDK.HostAccountStatePayload["accountState"] | null
-  accountStateSet: (accountState: Types.SDK.HostAccountStatePayload["accountState"] | null) => void
-}
-
-const getSystemTheme = (): Types.App.Theme => {
-  if (typeof window === "undefined") return "dark" // fallback for SSR
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  accountState: Types.SDK.HostAccountStatePayload
+  accountStateSet: (accountState: Types.SDK.HostAccountStatePayload) => void
 }
 
 export const useAppStore = create<AppStoreState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Theme
-      theme: "dark",
       themePrefer: "system",
-      initTheme: () => {
-        const preferredTheme = get().themePrefer
-        get().changeTheme(preferredTheme)
-      },
-      changeTheme: async (theme) => {
-        const themeCurrent = theme === "system" ? getSystemTheme() : theme
-        const themePrefer = theme
-        set({ theme: themeCurrent, themePrefer: themePrefer })
-      },
+      changeTheme: (themePrefer) => set({ themePrefer }),
 
       // Settings
       currency: "usd",

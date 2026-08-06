@@ -38,16 +38,16 @@
 
       td {
         border: 0 !important;
-        background: var(--color-td) !important;
+        background: var(--xr-td) !important;
       }
 
       td.ant-table-column-sort {
-        background: var(--color-td-hover) !important;
+        background: var(--xr-td-hover) !important;
       }
 
       &:hover {
         td {
-          background: var(--color-td-hover) !important;
+          background: var(--xr-td-hover) !important;
         }
       }
 
@@ -68,16 +68,16 @@
   tbody {
     tr {
       td {
-        background: var(--color-td-dark) !important;
+        background: var(--xr-td-dark) !important;
       }
 
       td.ant-table-column-sort {
-        background: var(--color-td-dark-hover) !important;
+        background: var(--xr-td-dark-hover) !important;
       }
 
       &:hover {
         td {
-          background: var(--color-td-dark-hover) !important;
+          background: var(--xr-td-dark-hover) !important;
         }
       }
     }

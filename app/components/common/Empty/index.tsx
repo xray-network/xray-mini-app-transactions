@@ -4,8 +4,8 @@ const Empty = ({
   title = "The page is still under development",
   descr = "Our team is working tirelessly to make this page live!",
 }: {
-  title?: string | JSX.Element
-  descr?: string | JSX.Element
+  title?: React.ReactNode
+  descr?: React.ReactNode
 }) => {
   return (
     <div className="text-center">

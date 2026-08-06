@@ -20,10 +20,11 @@
     "SDK"
   ],
   "type": "module",
+  "packageManager": "npm@10.8.2",
   "scripts": {
     "dev": "react-router dev --host --port 10003",
     "build": "react-router build",
-    "deploy": "yarn build && wrangler pages deploy",
+    "deploy": "npm run build && wrangler pages deploy",
     "serve": "serve build/client/ -s",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
@@ -34,10 +35,12 @@
   },
   "dependencies": {
     "@ant-design/happy-work-theme": "^1.0.1",
+    "@ant-design/cssinjs": "^1.23.0",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@heroicons/react": "^2.2.0",
-    "@react-router/node": "^7.5.3",
-    "@react-router/serve": "^7.5.3",
+    "@react-router/node": "7.8.2",
+    "@react-router/serve": "7.8.2",
+    "@xray-network/mini-app-sdk": "3.0.0",
     "antd": "^5.27.3",
     "buffer": "^6.0.3",
     "cardano-koios-client": "^1.0.12",
@@ -48,19 +51,17 @@
     "nprogress": "^0.2.0",
     "prettier": "^3.5.3",
     "react": "^19.1.0",
-    "react-copy-to-clipboard": "^5.1.0",
+    "react-copy-to-clipboard": "^5.1.1",
     "react-dom": "^19.1.0",
     "react-jazzicon": "^1.0.4",
-    "react-router": "^7.8.2",
+    "react-router": "7.8.2",
     "vite-plugin-svgr": "^4.5.0",
     "vite-plugin-wasm": "^3.5.0",
     "wrangler": "^4.19.1",
-    "xray-mini-app-sdk": "^0.1.4",
-    "xray-mini-app-sdk-react": "^0.1.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.8.2",
+    "@react-router/dev": "7.8.2",
     "@tailwindcss/vite": "^4.1.12",
     "@types/lodash": "^4.17.18",
     "@types/node": "^20",
@@ -70,7 +71,7 @@
     "@types/react-dom": "^19.1.2",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.8.3",
-    "vite": "^7.1.4",
+    "vite": "7.1.4",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

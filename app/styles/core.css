@@ -1,34 +1,21 @@
 html {
-  font-size: 16px;
-  color: var(--color-black);
-  height: 100%;
-
-  @media (width < 768px) {
-    font-size: 14px;
-  }
-
-  /* @media (width >= 768px) and (width < 1024px) {
-    font-size: 14px;
-  } */
+  font-size: 14px;
+  color: var(--xr-black);
+  height: 100% !important;
 }
 
 body {
   overflow-x: hidden !important;
   width: 100% !important;
-  height: 100%;
 }
 
 * {
-  scrollbar-color: var(--color-gray-200) transparent;
+  scrollbar-color: var(--xr-gray-200) transparent;
 }
 
 b,
 strong {
   font-weight: 700;
-}
-
-code {
-  font-size: 95%;
 }
 
 [data-disable-transitions="true"] {
@@ -41,7 +28,7 @@ code {
 
 #nprogress {
   .bar {
-    background: var(--color-blue-500);
+    background: var(--xr-blue-500);
     height: 3px;
   }
 
@@ -59,16 +46,16 @@ code {
 }
 
 [data-theme="dark"] {
-  scrollbar-color: var(--color-gray-900) transparent;
+  scrollbar-color: var(--xr-gray-900) transparent;
 
   &:root {
     color-scheme: dark;
   }
 
   * {
-    scrollbar-color: var(--color-gray-900) transparent;
+    scrollbar-color: var(--xr-gray-900) transparent;
   }
 
-  color: var(--color-white);
-  background: var(--color-black);
+  color: var(--xr-white);
+  background: var(--xr-black);
 }

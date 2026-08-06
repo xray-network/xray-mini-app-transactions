@@ -9,15 +9,18 @@ import * as utils from "@/utils"
 import { useAppStore } from "@/store/app"
 import * as Types from "@/types"
 
-const explorerNameMap: Record<Types.App.Explorer, string> = {
+// XRAY Explorer has no public URL scheme yet, so unsupported values use CardanoScan.
+const explorerNameMap: Partial<Record<Types.App.Explorer, string>> = {
   cardanoscan: "CardanoScan",
   cexplorer: "CExplorer",
   adastat: "AdaStat",
 }
 
-const explorerUrlMap: Record<
-  Types.App.Explorer,
-  { [key in "paymentAddress" | "stakingAddress" | "tx" | "pool"]: (value: string) => string }
+const explorerUrlMap: Partial<
+  Record<
+    Types.App.Explorer,
+    { [key in "paymentAddress" | "stakingAddress" | "tx" | "pool"]: (value: string) => string }
+  >
 > = {
   cardanoscan: {
     paymentAddress: (value: string) => `https://cardanoscan.io/address/${value}`,
@@ -51,6 +54,8 @@ const InformerExplorer = ({
   help?: string | React.ReactNode
 }) => {
   const explorerName: Types.App.Explorer = useAppStore((state) => state.explorer)
+  const explorerTitle = explorerNameMap[explorerName] ?? explorerNameMap.cardanoscan!
+  const explorerUrls = explorerUrlMap[explorerName] ?? explorerUrlMap.cardanoscan!
 
   return (
     <div className={classNames(style.informer)}>
@@ -62,9 +67,9 @@ const InformerExplorer = ({
                 {utils.truncate(value)}
               </strong>
             </Copy>
-            <Tooltip title={`View on ${explorerNameMap[explorerName]}`}>
+            <Tooltip title={`View on ${explorerTitle}`}>
               <a
-                href={explorerUrlMap[explorerName][type](value)}
+                href={explorerUrls[type](value)}
                 target="_blank"
                 rel="noreferrer"
                 className="ms-0.5 text-gray-500 hover:opacity-75 transition-opacity duration-150"

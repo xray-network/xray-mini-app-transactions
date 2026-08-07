@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react"
-import { useMiniApp, useTheme as useHostTheme } from "@xray-network/mini-app-sdk/react"
-import { useAppStore } from "@/store/app"
+import {
+  useCurrency as useHostCurrency,
+  useExplorer as useHostExplorer,
+  useHideBalances as useHostHideBalances,
+  useMiniApp,
+  useNetwork as useHostNetwork,
+  useTheme as useHostTheme,
+} from "@xray-network/xray-js/mini-app-bridge/react"
+import { usePreferencesStore } from "@/store/preferences"
 import type { App } from "@/types"
 
 const getSystemTheme = (): App.Theme =>
@@ -28,10 +35,37 @@ const useSystemTheme = (enabled: boolean): App.Theme => {
 export const useEffectiveTheme = (): App.Theme => {
   const { connected } = useMiniApp()
   const hostTheme = useHostTheme()
-  const preference = useAppStore((state) => state.themePrefer)
+  const preference = usePreferencesStore((state) => state.themePrefer)
   const systemTheme = useSystemTheme(preference === "system")
 
   if (connected && hostTheme) return hostTheme
   return preference === "system" ? systemTheme : preference
 }
 
+export const useEffectiveNetwork = () => {
+  const { connected } = useMiniApp()
+  const hostNetwork = useHostNetwork()
+  const localNetwork = usePreferencesStore((state) => state.network)
+  return connected && hostNetwork ? hostNetwork : localNetwork
+}
+
+export const useEffectiveCurrency = () => {
+  const { connected } = useMiniApp()
+  const hostCurrency = useHostCurrency()
+  const localCurrency = usePreferencesStore((state) => state.currency)
+  return connected && hostCurrency ? hostCurrency : localCurrency
+}
+
+export const useEffectiveHideBalances = () => {
+  const { connected } = useMiniApp()
+  const hostHideBalances = useHostHideBalances()
+  const localHideBalances = usePreferencesStore((state) => state.hideBalances)
+  return connected && hostHideBalances !== null ? hostHideBalances : localHideBalances
+}
+
+export const useEffectiveExplorer = () => {
+  const { connected } = useMiniApp()
+  const hostExplorer = useHostExplorer()
+  const localExplorer = usePreferencesStore((state) => state.explorer)
+  return connected && hostExplorer ? hostExplorer : localExplorer
+}

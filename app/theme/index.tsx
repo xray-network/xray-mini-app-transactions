@@ -3,7 +3,7 @@ import { ConfigProvider, App } from "antd"
 import { HappyProvider } from "@ant-design/happy-work-theme"
 import { StyleProvider, px2remTransformer } from "@ant-design/cssinjs"
 import { useEffectiveTheme } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
-import EscapeAntd from "@/utils/escapeAntd"
+import EscapeAntd from "./EscapeAntd"
 import { lightTheme, darkTheme } from "./antd"
 import { metaThemeColor } from "./palette"
 

@@ -14,6 +14,6 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: ["@xray-network/mini-app-sdk"],
+    noExternal: [/^@xray-network\/xray-js(?:\/|$)/],
   },
 })

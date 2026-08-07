@@ -1,6 +1,5 @@
 import { SLOT_CONFIG_NETWORK, SLOT_EPOCH_DURATION, SLOT_STARTING_EPOCH } from "@/config"
-import { Buffer } from "buffer"
-import { crc8 } from "./crc8"
+import { assets, cip67, encoding, slots } from "@xray-network/xray-js/cardano"
 import * as Types from "@/types"
 
 export const truncate = (string: string, start = 6, end = 6) => {
@@ -88,21 +87,21 @@ export const isChromiumBased = (): boolean => {
   return typeof window !== "undefined" && "chrome" in window && !!(window.chrome && (window.chrome as any).app)
 }
 
-export const epochStartTime = (epoch: number, network: Types.CW3Types.NetworkName) => {
+export const epochStartTime = (epoch: number, network: Types.CardanoTypes.NetworkName) => {
   const config = SLOT_CONFIG_NETWORK[network]
   const startingEpoch = SLOT_STARTING_EPOCH[network]
   const epochDuration = SLOT_EPOCH_DURATION[network]
   return (epoch * epochDuration + (config.zeroTime / 1000 - startingEpoch * 432000)) * 1000
 }
 
-export const epochEndTime = (epoch: number, network: Types.CW3Types.NetworkName) => {
+export const epochEndTime = (epoch: number, network: Types.CardanoTypes.NetworkName) => {
   const config = SLOT_CONFIG_NETWORK[network]
   const startingEpoch = SLOT_STARTING_EPOCH[network]
   const epochDuration = SLOT_EPOCH_DURATION[network]
   return (epoch * epochDuration + epochDuration + (config.zeroTime / 1000 - startingEpoch * 432000)) * 1000
 }
 
-export const epochProgress = (epoch: number, network: Types.CW3Types.NetworkName) => {
+export const epochProgress = (epoch: number, network: Types.CardanoTypes.NetworkName) => {
   const epochDuration = SLOT_EPOCH_DURATION[network] * 1000
   return Math.min(((Date.now() - epochStartTime(epoch, network)) / epochDuration) * 100, 100).toFixed(1)
 }
@@ -133,18 +132,12 @@ export const labelType = (label: number): string | undefined => {
   }
 }
 
-export const cip67Crc8Checksum = (num: string): string => {
-  return crc8(Buffer.from(num, "hex")).toString(16).padStart(2, "0")
-}
-
 export function cip67FromLabel(label: string): number | undefined {
-  if (label.length !== 8 || !(label[0] === "0" && label[7] === "0")) {
+  try {
+    return cip67.decode_asset_name_label(encoding.fromHex(label))
+  } catch {
     return undefined
   }
-  const numHex = label.slice(1, 5)
-  const num = parseInt(numHex, 16)
-  const check = label.slice(5, 7)
-  return check === cip67Crc8Checksum(numHex) ? num : undefined
 }
 
 export const decodeAssetName = (assetName: string) => {
@@ -155,7 +148,7 @@ export const decodeAssetName = (assetName: string) => {
       const label = cip67FromLabel(labelHex)
       if (label) {
         return {
-          assetNameAsciiNoLabel: Buffer.from(assetNameHex || "", "hex").toString("utf-8") || "",
+          assetNameAsciiNoLabel: assets.assetNameToAssetNameAscii(assetNameHex || "") || "",
           label: labelHex,
           labelAscii: label,
           labelType: labelType(label),
@@ -165,7 +158,7 @@ export const decodeAssetName = (assetName: string) => {
       }
     }
     const decoded = decode(assetName)
-    const assetNameAscii = Buffer.from(assetName || "", "hex").toString("utf-8") || ""
+    const assetNameAscii = assets.assetNameToAssetNameAscii(assetName || "") || ""
     const assetNameAsciiNoLabel = decoded?.assetNameAsciiNoLabel || assetNameAscii
     const format = /^([/\\\[\]*<>(),.!?@+=%&$#^'"|a-zA-Z0-9 _-]+)$/
     const assetNameFinal = format.test(assetNameAsciiNoLabel) ? assetNameAsciiNoLabel : assetName
@@ -209,15 +202,10 @@ export const timeAgo = (timestamp: number, locale: string = "en"): string => {
   return rtf.format(0, "second")
 }
 
-export const unixTimeToSlot = (unixTime: number, network: Types.CW3Types.NetworkName): number => {
-  const slotConfig = SLOT_CONFIG_NETWORK[network]
-  const timePassed = unixTime - slotConfig.zeroTime
-  const slotsPassed = Math.floor(timePassed / slotConfig.slotDuration)
-  return slotsPassed + slotConfig.zeroSlot
+export const unixTimeToSlot = (unixTime: number, network: Types.CardanoTypes.NetworkName): number => {
+  return slots.unixTimeToSlot(unixTime, SLOT_CONFIG_NETWORK[network])
 }
 
-export const slotToUnixTime = (slot: number, network: Types.CW3Types.NetworkName): number => {
-  const slotConfig = SLOT_CONFIG_NETWORK[network]
-  const msAfterBegin = (slot - slotConfig.zeroSlot) * slotConfig.slotDuration
-  return slotConfig.zeroTime + msAfterBegin
+export const slotToUnixTime = (slot: number, network: Types.CardanoTypes.NetworkName): number => {
+  return slots.slotToUnixTime(slot, SLOT_CONFIG_NETWORK[network])
 }

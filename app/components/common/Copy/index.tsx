@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
 import { Tooltip } from "antd"
-import { message } from "@/utils/escapeAntd"
+import { message } from "@/theme/EscapeAntd"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline"
 

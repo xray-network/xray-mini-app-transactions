@@ -4,7 +4,7 @@ import { quantityFormat, quantityWithCommas } from "@/utils"
 import classNames from "classnames"
 import style from "./style.module.css"
 import { InformationCircleIcon } from "@heroicons/react/24/outline"
-import { useAppStore } from "@/store/app"
+import { useEffectiveHideBalances } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
 
 const InformerAda = ({
   value,
@@ -31,7 +31,7 @@ const InformerAda = ({
   sameSize?: boolean
   prefix?: string
 }) => {
-  const hideBalances = useAppStore((state) => state.hideBalances)
+  const hideBalances = useEffectiveHideBalances()
   // const appCurrency = useAppSelector((state) => state.settings.currency)
   // const exchangeRates = useAppSelector((state) => state.network.exchangeRates)
 

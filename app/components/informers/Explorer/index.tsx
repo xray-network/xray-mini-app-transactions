@@ -6,7 +6,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline"
 import { SVGCompass } from "@/svg"
 import Copy from "@/components/common/Copy"
 import * as utils from "@/utils"
-import { useAppStore } from "@/store/app"
+import { useEffectiveExplorer } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
 import * as Types from "@/types"
 
 // XRAY Explorer has no public URL scheme yet, so unsupported values use CardanoScan.
@@ -53,7 +53,7 @@ const InformerExplorer = ({
   title?: string
   help?: string | React.ReactNode
 }) => {
-  const explorerName: Types.App.Explorer = useAppStore((state) => state.explorer)
+  const explorerName: Types.App.Explorer = useEffectiveExplorer()
   const explorerTitle = explorerNameMap[explorerName] ?? explorerNameMap.cardanoscan!
   const explorerUrls = explorerUrlMap[explorerName] ?? explorerUrlMap.cardanoscan!
 

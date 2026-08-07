@@ -8,7 +8,8 @@ import * as Utils from "@/utils"
 import * as UtilsTxKoios from "@/utils/txKoios"
 import Informers from "@/components/informers"
 import Empty from "@/components/common/Empty"
-import { useAppStore } from "@/store/app"
+import { useAccountState, useTip } from "@xray-network/xray-js/mini-app-bridge/react"
+import { useEffectiveNetwork } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
 import {
   ArrowPathIcon,
   ArrowUpIcon,
@@ -20,15 +21,15 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline"
 import style from "./style.module.css"
-import KoiosClient from "cardano-koios-client"
+import { KoiosClient } from "@xray-network/xray-js/cardano"
 
 type TAdddressTxs = Types.KoiosTypes.paths["/address_txs"]["post"]["responses"]["200"]["content"]["application/json"]
 type TTxInfo = Types.KoiosTypes.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"]
 
 export default function HomePage() {
-  const network = useAppStore((state) => state.network)
-  const tip = useAppStore((state) => state.tip)
-  const accountState = useAppStore((state) => state.accountState)
+  const network = useEffectiveNetwork()
+  const { tip } = useTip()
+  const { accountState } = useAccountState()
   const [firstLoad, setFirstLoad] = useState(true)
   const [koiosClient, setKoiosClient] = useState<ReturnType<typeof KoiosClient> | null>(null)
   const [loadingList, setLoadingList] = useState(false)

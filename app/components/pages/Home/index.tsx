@@ -21,17 +21,17 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline"
 import style from "./style.module.css"
-import { KoiosClient } from "@xray-network/xray-js/cardano"
+import { providers } from "@xray-network/xray-js/cardano"
 
-type TAdddressTxs = Types.KoiosTypes.paths["/address_txs"]["post"]["responses"]["200"]["content"]["application/json"]
-type TTxInfo = Types.KoiosTypes.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"]
+type TAdddressTxs = Types.CardanoProviders.koios.Types.paths["/address_txs"]["post"]["responses"]["200"]["content"]["application/json"]
+type TTxInfo = Types.CardanoProviders.koios.Types.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"]
 
 export default function HomePage() {
   const network = useEffectiveNetwork()
   const { tip } = useTip()
   const { accountState } = useAccountState()
   const [firstLoad, setFirstLoad] = useState(true)
-  const [koiosClient, setKoiosClient] = useState<ReturnType<typeof KoiosClient> | null>(null)
+  const [koiosClient, setKoiosClient] = useState<ReturnType<typeof providers.koios.Client> | null>(null)
   const [loadingList, setLoadingList] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const [step, setStep] = useState(0)
@@ -41,7 +41,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (network) {
-      const client = KoiosClient(`https://graph.xray.app/output/services/koios/${network}/api/v1/`)
+      const client = providers.koios.Client(`https://graph.xray.app/output/services/koios/${network}/api/v1/`)
       setKoiosClient(client)
     }
   }, [network])

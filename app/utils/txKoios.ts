@@ -2,9 +2,9 @@ import * as Types from "@/types"
 
 type Type = "send" | "receive" | "internal"
 type Inputs =
-  Types.KoiosTypes.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"][number]["inputs"]
+  Types.CardanoProviders.koios.Types.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"][number]["inputs"]
 type Outputs =
-  Types.KoiosTypes.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"][number]["outputs"]
+  Types.CardanoProviders.koios.Types.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"][number]["outputs"]
 
 export const txDetailsWithAddress = (
   address: string,

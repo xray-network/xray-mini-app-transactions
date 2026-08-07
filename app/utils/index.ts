@@ -1,5 +1,5 @@
 import { SLOT_CONFIG_NETWORK, SLOT_EPOCH_DURATION, SLOT_STARTING_EPOCH } from "@/config"
-import { assets, cip67, encoding, slots } from "@xray-network/xray-js/cardano"
+import { assets, cips, encoding, slots } from "@xray-network/xray-js/cardano"
 import * as Types from "@/types"
 
 export const truncate = (string: string, start = 6, end = 6) => {
@@ -134,7 +134,7 @@ export const labelType = (label: number): string | undefined => {
 
 export function cip67FromLabel(label: string): number | undefined {
   try {
-    return cip67.decode_asset_name_label(encoding.fromHex(label))
+    return cips.cip67.decode_asset_name_label(encoding.fromHex(label))
   } catch {
     return undefined
   }

@@ -6,7 +6,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline"
 import { SVGCompass } from "@/svg"
 import Copy from "@/components/common/Copy"
 import * as utils from "@/utils"
-import { useEffectiveExplorer } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
+import { useEffectiveExplorer } from "@/integrations/xray-js/useEffectiveSettings"
 import * as Types from "@/types"
 
 // XRAY Explorer has no public URL scheme yet, so unsupported values use CardanoScan.

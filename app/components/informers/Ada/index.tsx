@@ -4,7 +4,7 @@ import { quantityFormat, quantityWithCommas } from "@/utils"
 import classNames from "classnames"
 import style from "./style.module.css"
 import { InformationCircleIcon } from "@heroicons/react/24/outline"
-import { useEffectiveHideBalances } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
+import { useEffectiveHideBalances } from "@/integrations/xray-js/useEffectiveSettings"
 
 const InformerAda = ({
   value,

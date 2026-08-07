@@ -9,7 +9,7 @@ import * as UtilsTxKoios from "@/utils/txKoios"
 import Informers from "@/components/informers"
 import Empty from "@/components/common/Empty"
 import { useAccountState, useTip } from "@xray-network/xray-js/mini-app-bridge/react"
-import { useEffectiveNetwork } from "@/integrations/xray-mini-app-sdk/useEffectiveSettings"
+import { useEffectiveNetwork } from "@/integrations/xray-js/useEffectiveSettings"
 import {
   ArrowPathIcon,
   ArrowUpIcon,

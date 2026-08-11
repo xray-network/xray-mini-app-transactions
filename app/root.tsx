@@ -2,7 +2,6 @@ import "@/styles/tailwind.css"
 import "nprogress/nprogress.css"
 import "@/styles/style.css"
 
-import "@ant-design/v5-patch-for-react-19"
 import type { Route } from "./+types/root"
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
 import HostRouteSync from "@/shared/routing/HostRouteSync"

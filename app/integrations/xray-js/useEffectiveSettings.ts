@@ -3,8 +3,8 @@ import {
   useCurrency as useHostCurrency,
   useExplorer as useHostExplorer,
   useHideBalances as useHostHideBalances,
+  useHostContext,
   useMiniApp,
-  useNetwork as useHostNetwork,
   useTheme as useHostTheme,
 } from "@xray-network/xray-js/mini-app-bridge/react"
 import { usePreferencesStore } from "@/store/preferences"
@@ -42,11 +42,16 @@ export const useEffectiveTheme = (): App.Theme => {
   return preference === "system" ? systemTheme : preference
 }
 
-export const useEffectiveNetwork = () => {
+export const useEffectiveHostContext = () => {
   const { connected } = useMiniApp()
-  const hostNetwork = useHostNetwork()
+  const hostContext = useHostContext()
+  return connected ? hostContext : null
+}
+
+export const useEffectiveNetwork = () => {
+  const hostContext = useEffectiveHostContext()
   const localNetwork = usePreferencesStore((state) => state.network)
-  return connected && hostNetwork ? hostNetwork : localNetwork
+  return hostContext?.blockchain === "cardano" ? hostContext.network : localNetwork
 }
 
 export const useEffectiveCurrency = () => {

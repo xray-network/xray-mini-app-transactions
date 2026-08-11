@@ -8,7 +8,7 @@ import * as Utils from "@/utils"
 import * as UtilsTxKoios from "@/utils/txKoios"
 import Informers from "@/components/informers"
 import Empty from "@/components/common/Empty"
-import { useAccountState, useTip } from "@xray-network/xray-js/mini-app-bridge/react"
+import { useAccountState, useTip } from "@xray-network/xray-js/mini-app-bridge/cardano/react"
 import { useEffectiveNetwork } from "@/integrations/xray-js/useEffectiveSettings"
 import {
   ArrowPathIcon,
@@ -23,8 +23,10 @@ import {
 import style from "./style.module.css"
 import { providers } from "@xray-network/xray-js/cardano"
 
-type TAdddressTxs = Types.CardanoProviders.koios.Types.paths["/address_txs"]["post"]["responses"]["200"]["content"]["application/json"]
-type TTxInfo = Types.CardanoProviders.koios.Types.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"]
+type TAdddressTxs =
+  Types.CardanoProviders.koios.Types.paths["/address_txs"]["post"]["responses"]["200"]["content"]["application/json"]
+type TTxInfo =
+  Types.CardanoProviders.koios.Types.paths["/tx_info"]["post"]["responses"]["200"]["content"]["application/json"]
 
 export default function HomePage() {
   const network = useEffectiveNetwork()

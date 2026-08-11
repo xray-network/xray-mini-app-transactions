@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import {
   useCurrency as useHostCurrency,
-  useExplorer as useHostExplorer,
   useHideBalances as useHostHideBalances,
   useHostContext,
   useMiniApp,
   useTheme as useHostTheme,
 } from "@xray-network/xray-js/mini-app-bridge/react"
+import { useExplorer as useHostExplorer } from "@xray-network/xray-js/mini-app-bridge/cardano/react"
 import { usePreferencesStore } from "@/store/preferences"
 import type { App } from "@/types"
 

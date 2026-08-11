@@ -95,7 +95,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="max-w-256 mx-auto pt-5">
+    <div className="max-w-4xl mx-auto pt-5">
       <div className="flex items-center mb-5 ">
         <h4 className="mb-0 text-2xl font-black">Transactions</h4>
         {accountState && (

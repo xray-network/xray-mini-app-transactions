@@ -1,5 +1,5 @@
 @import "@/styles/tailwind.css";
 
 .ant-message {
-  @apply font-bold !text-base;
+  @apply font-bold text-base!;
 }

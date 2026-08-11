@@ -9,6 +9,8 @@
  * directly, so the [data-theme="dark"] overrides apply per element.
  */
 @theme inline {
+  --spacing: 3.5px;
+
   --font-sans: var(--xr-font-sans);
   --font-mono: var(--xr-font-mono);
 

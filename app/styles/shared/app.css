@@ -1,7 +1,7 @@
 @import "@/styles/tailwind.css";
 
 .shared-app-header {
-  @apply h-[4rem] flex items-center px-6;
+  @apply h-16 flex items-center px-6;
 
   h1 {
     @apply text-2xl font-black;
@@ -9,5 +9,5 @@
 }
 
 .shared-app-container {
-  @apply overflow-y-scroll h-[calc(100dvh-8rem)] px-6;
+  @apply overflow-y-scroll h-[calc(100dvh-112px)] px-6;
 }

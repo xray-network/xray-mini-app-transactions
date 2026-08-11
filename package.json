@@ -34,7 +34,6 @@
     "#tailwind.css": "app/styles/tailwind.css"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^2.1.2",
     "@ant-design/happy-work-theme": "^2.0.0",
     "@heroicons/react": "^2.2.0",
     "@react-router/node": "7.8.2",

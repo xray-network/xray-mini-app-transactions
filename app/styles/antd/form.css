@@ -1,5 +1,5 @@
 @import "@/styles/tailwind.css";
 
 .ant-form-item-explain {
-  @apply !text-sm;
+  @apply text-sm!;
 }

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import {
+  cardano,
   useCurrency as useHostCurrency,
   useHideBalances as useHostHideBalances,
   useHostContext,
   useMiniApp,
   useTheme as useHostTheme,
 } from "@xray-network/xray-js/mini-app-bridge/react"
-import { useExplorer as useHostExplorer } from "@xray-network/xray-js/mini-app-bridge/cardano/react"
 import { usePreferencesStore } from "@/store/preferences"
 import type { App } from "@/types"
 
@@ -70,7 +70,7 @@ export const useEffectiveHideBalances = () => {
 
 export const useEffectiveExplorer = () => {
   const { connected } = useMiniApp()
-  const hostExplorer = useHostExplorer()
+  const hostExplorer = cardano.bridge.useExplorer()
   const localExplorer = usePreferencesStore((state) => state.explorer)
   return connected && hostExplorer ? hostExplorer : localExplorer
 }

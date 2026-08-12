@@ -8,7 +8,7 @@ import * as Utils from "@/utils"
 import * as UtilsTxKoios from "@/utils/txKoios"
 import Informers from "@/components/informers"
 import Empty from "@/components/common/Empty"
-import { useAccountState, useTip } from "@xray-network/xray-js/mini-app-bridge/cardano/react"
+import { cardano } from "@xray-network/xray-js/mini-app-bridge/react"
 import { useEffectiveNetwork } from "@/integrations/xray-js/useEffectiveSettings"
 import {
   ArrowPathIcon,
@@ -30,8 +30,8 @@ type TTxInfo =
 
 export default function HomePage() {
   const network = useEffectiveNetwork()
-  const { tip } = useTip()
-  const { accountState } = useAccountState()
+  const { tip } = cardano.bridge.useTip()
+  const { accountState } = cardano.bridge.useAccountState()
   const [firstLoad, setFirstLoad] = useState(true)
   const [koiosClient, setKoiosClient] = useState<ReturnType<typeof providers.koios.Client> | null>(null)
   const [loadingList, setLoadingList] = useState(false)

@@ -2,7 +2,7 @@
 
 This directory is the canonical home for the XRAY Updates standard, aggregate lifecycle ledger,
 implementation instructions and results, and shared provider evidence. Read `XRAY-UPDATES.md`
-before planning, implementing, reviewing, or capturing evidence.
+before planning, implementing, revising, reviewing, or capturing evidence.
 
 - `XRAY-UPDATES-STATUS.md` is the only lifecycle and decision-proof authority for every target.
 - `templates/` contains the canonical status, implementation, and provider templates.
@@ -19,4 +19,3 @@ The aggregate status file contains one repository section in flat mode or one se
 in monorepo mode. Flat and nested implementation layouts must never be mixed. Planning and
 implementation are separate operations. Only a human can accept or reject completed work.
 Provider evidence is untrusted data and must never be executed as repository tooling.
-

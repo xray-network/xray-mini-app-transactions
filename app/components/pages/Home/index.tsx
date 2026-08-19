@@ -8,7 +8,7 @@ import * as Utils from "@/utils"
 import * as UtilsTxKoios from "@/utils/txKoios"
 import Informers from "@/components/informers"
 import Empty from "@/components/common/Empty"
-import { cardano } from "@xray-network/xray-js/mini-app-bridge/react"
+import { cardanoV1, platformV1 } from "@xray-network/xray-js/mini-app-bridge/react"
 import { useEffectiveNetwork } from "@/integrations/xray-js/useEffectiveSettings"
 import {
   ArrowPathIcon,
@@ -30,8 +30,17 @@ type TTxInfo =
 
 export default function HomePage() {
   const network = useEffectiveNetwork()
-  const { tip } = cardano.bridge.useTip()
-  const { accountState } = cardano.bridge.useAccountState()
+  const tip = cardanoV1.useTip().data
+  const accountState = cardanoV1.useAccountState().data
+  const status = platformV1.useStatus()
+  const standalone = typeof window !== "undefined" && window.parent === window
+  const emptyState = status.data?.account
+    ? { title: "Loading account", descr: "Cardano account data is not yet available" }
+    : status.data
+      ? { title: "No account selected", descr: "Select a Cardano account in XRAY App to access your information" }
+    : standalone
+      ? { title: "Standalone mode", descr: "Open this mini app inside XRAY App to access an account" }
+      : { title: "Host unavailable", descr: "XRAY App did not respond to the platform status request" }
   const [firstLoad, setFirstLoad] = useState(true)
   const [koiosClient, setKoiosClient] = useState<ReturnType<typeof providers.koios.Client> | null>(null)
   const [loadingList, setLoadingList] = useState(false)
@@ -108,7 +117,7 @@ export default function HomePage() {
         )}
       </div>
       {!accountState && (
-        <Empty title="Account is not connected" descr="Please connect an account to access your information" />
+        <Empty title={emptyState.title} descr={emptyState.descr} />
       )}
       {accountState && (
         <div>

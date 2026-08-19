@@ -1,21 +1,23 @@
 import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router"
-import { client } from "@xray-network/xray-js/mini-app-bridge"
-import { useHostMessage, useMiniApp } from "@xray-network/xray-js/mini-app-bridge/react"
+import { clientPlatformV1 } from "@xray-network/xray-js/mini-app-bridge"
 
 export default function HostRouteSync() {
-  const { connected } = useMiniApp()
   const navigate = useNavigate()
   const location = useLocation()
   const route = location.pathname + location.search + location.hash
 
   useEffect(() => {
-    if (connected) void client.platform.routeChanged(route)
-  }, [connected, route])
+    clientPlatformV1.routeChanged(route)
+  }, [route])
 
-  useHostMessage("xray.host.routeChanged", (newRoute) => {
-    if (newRoute !== route) void navigate(newRoute)
-  })
+  useEffect(
+    () =>
+      clientPlatformV1.listen("routeChanged", ({ payload: newRoute }) => {
+        if (newRoute !== route) void navigate(newRoute)
+      }),
+    [navigate, route]
+  )
 
   return null
 }

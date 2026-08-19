@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react"
-import {
-  cardano,
-  useCurrency as useHostCurrency,
-  useHideBalances as useHostHideBalances,
-  useHostContext,
-  useMiniApp,
-  useTheme as useHostTheme,
-} from "@xray-network/xray-js/mini-app-bridge/react"
+import { cardanoV1, platformV1 } from "@xray-network/xray-js/mini-app-bridge/react"
 import { usePreferencesStore } from "@/store/preferences"
 import type { App } from "@/types"
 
@@ -33,19 +26,16 @@ const useSystemTheme = (enabled: boolean): App.Theme => {
 }
 
 export const useEffectiveTheme = (): App.Theme => {
-  const { connected } = useMiniApp()
-  const hostTheme = useHostTheme()
+  const hostTheme = platformV1.useTheme()
   const preference = usePreferencesStore((state) => state.themePrefer)
   const systemTheme = useSystemTheme(preference === "system")
 
-  if (connected && hostTheme) return hostTheme
+  if (hostTheme.data) return hostTheme.data
   return preference === "system" ? systemTheme : preference
 }
 
 export const useEffectiveHostContext = () => {
-  const { connected } = useMiniApp()
-  const hostContext = useHostContext()
-  return connected ? hostContext : null
+  return platformV1.useStatus().data?.account ?? null
 }
 
 export const useEffectiveNetwork = () => {
@@ -55,22 +45,19 @@ export const useEffectiveNetwork = () => {
 }
 
 export const useEffectiveCurrency = () => {
-  const { connected } = useMiniApp()
-  const hostCurrency = useHostCurrency()
+  const hostCurrency = platformV1.useCurrency()
   const localCurrency = usePreferencesStore((state) => state.currency)
-  return connected && hostCurrency ? hostCurrency : localCurrency
+  return hostCurrency.data ?? localCurrency
 }
 
 export const useEffectiveHideBalances = () => {
-  const { connected } = useMiniApp()
-  const hostHideBalances = useHostHideBalances()
+  const hostHideBalances = platformV1.useHideBalances()
   const localHideBalances = usePreferencesStore((state) => state.hideBalances)
-  return connected && hostHideBalances !== null ? hostHideBalances : localHideBalances
+  return hostHideBalances.data ?? localHideBalances
 }
 
 export const useEffectiveExplorer = () => {
-  const { connected } = useMiniApp()
-  const hostExplorer = cardano.bridge.useExplorer()
+  const hostExplorer = cardanoV1.useExplorer()
   const localExplorer = usePreferencesStore((state) => state.explorer)
-  return connected && hostExplorer ? hostExplorer : localExplorer
+  return hostExplorer.data ?? localExplorer
 }

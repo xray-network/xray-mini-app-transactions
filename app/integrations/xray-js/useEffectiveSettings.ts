@@ -56,8 +56,17 @@ export const useEffectiveHideBalances = () => {
   return hostHideBalances.data ?? localHideBalances
 }
 
-export const useEffectiveExplorer = () => {
+export const useEffectiveExplorer = (): App.Explorer => {
   const hostExplorer = cardanoV1.useExplorer()
   const localExplorer = usePreferencesStore((state) => state.explorer)
-  return hostExplorer.data ?? localExplorer
+  if (!hostExplorer.data) return localExplorer
+  if (
+    hostExplorer.data === "cardanoscan" ||
+    hostExplorer.data === "cexplorer" ||
+    hostExplorer.data === "adastat" ||
+    hostExplorer.data === "xray"
+  ) {
+    return hostExplorer.data
+  }
+  return "cardanoscan"
 }

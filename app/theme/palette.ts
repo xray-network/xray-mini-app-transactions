@@ -1,12 +1,6 @@
 /**
- * Design tokens — the single source of truth for the app's colors, font,
- * radii and shadows.
- *
- * Consumed in two ways:
- * - app/theme/antd.ts builds the antd light/dark ThemeConfig from it
- * - app/theme/css.ts serializes it to CSS variables (--xr-*), injected as a
- *   <style> tag in app/root.tsx; Tailwind maps its theme onto those variables
- *   via `@theme inline` in app/styles/tailwind.css
+ * Design tokens shared by Ant Design, CSS variables, and Tailwind utilities.
+ * Keep visual values here so every styling layer resolves the same theme.
  */
 
 const offWhite = "#f6f7f2"
@@ -21,26 +15,22 @@ export const radius = {
   lg: 20,
 }
 
-/** Browser chrome color (<meta name="theme-color">), per theme */
 export const metaThemeColor = {
   light: "#ffffff",
   dark: "#000000",
 } as const
 
-/** Theme-independent color scales, emitted as CSS variables on :root */
 export const palette = {
   white: "#ffffff",
   black: "#000000",
+  transparent: "transparent",
   offWhite,
-
-  // Custom table row backgrounds (see app/styles/shared/table.css)
   td: {
     DEFAULT: offWhite,
     hover: "#eeefe7",
     dark: "#2f222c",
     darkHover: "#3a2b36",
   },
-
   blue: {
     DEFAULT: "#1940ed",
     50: "#c3cdfa",
@@ -55,7 +45,6 @@ export const palette = {
     900: "#030923",
     950: "#010209",
   },
-
   green: {
     DEFAULT: "#15e4a3",
     50: "#f0fcfa",
@@ -70,7 +59,6 @@ export const palette = {
     900: "#046635",
     950: "#02421e",
   },
-
   gray: {
     DEFAULT: "#6e758d",
     50: "#f9fafb",
@@ -85,17 +73,36 @@ export const palette = {
     900: "#1e2232",
     950: "#0e0e18",
   },
-
   orange: {
+    DEFAULT: "#f97316",
+    50: "#fff4e6",
+    100: "#ffeadc",
+    200: "#ffd1b3",
+    300: "#ffb88a",
+    400: "#ff9f61",
     500: "#f97316",
+    600: "#cc5e13",
+    700: "#995011",
+    800: "#66370e",
+    900: "#331b07",
+    950: "#190d03",
   },
-
   red: {
+    DEFAULT: "#ef4444",
+    50: "#fef2f2",
+    100: "#fee2e2",
+    200: "#fecaca",
+    300: "#fca5a5",
+    400: "#f87171",
     500: "#ef4444",
+    600: "#dc2626",
+    700: "#b91c1c",
+    800: "#991b1b",
+    900: "#7f1d1d",
+    950: "#450a0a",
   },
 }
 
-/** Dark-theme scale overrides, emitted under [data-theme="dark"] */
 export const paletteDark = {
   blue: {
     DEFAULT: "#5e69ff",
@@ -113,7 +120,6 @@ export const paletteDark = {
   },
 }
 
-/** Semantic tokens, resolved per theme (emitted into :root and the dark override) */
 export const semantic = {
   light: {
     primary: palette.blue.DEFAULT,

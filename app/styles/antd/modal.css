@@ -25,3 +25,13 @@
   @apply border-0! pt-15!;
   @apply dark:border-gray-700!;
 }
+
+.ant-modal-wrap {
+  scrollbar-gutter: stable;
+}
+
+@supports not (scrollbar-gutter: stable) {
+  .ant-modal-wrap {
+    overflow-y: scroll;
+  }
+}

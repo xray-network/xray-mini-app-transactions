@@ -1,10 +1,55 @@
 import { theme } from "antd"
 import type { ThemeConfig } from "antd"
 import merge from "lodash/merge"
-import { palette, paletteDark, semantic, fontFamily, radius } from "./palette"
+import { fontFamily, palette, radius, semantic } from "./palette"
 
-/** antd light/dark themes built from the design tokens in app/theme/palette.ts */
+const lightNeutralTokens = {
+  colorBgBase: palette.white,
+  colorBgLayout: palette.gray[50],
+  colorBgContainer: palette.white,
+  colorBgElevated: palette.white,
+  colorBgSpotlight: palette.gray[950],
+  colorBgContainerDisabled: palette.gray[100],
+  colorFill: palette.gray[300],
+  colorFillSecondary: palette.gray[200],
+  colorFillTertiary: palette.gray[100],
+  colorFillQuaternary: palette.gray[50],
+  colorFillAlter: palette.gray[50],
+  colorTextBase: palette.black,
+  colorText: palette.black,
+  colorTextSecondary: palette.gray[600],
+  colorTextTertiary: palette.gray[500],
+  colorTextQuaternary: palette.gray[400],
+  colorTextDisabled: palette.gray[400],
+  colorBorder: palette.gray[300],
+  colorBorderSecondary: palette.gray[200],
+  colorSplit: palette.gray[200],
+} satisfies ThemeConfig["token"]
 
+const darkNeutralTokens = {
+  colorBgBase: palette.black,
+  colorBgLayout: palette.gray[950],
+  colorBgContainer: palette.black,
+  colorBgElevated: palette.gray[900],
+  colorBgSpotlight: palette.white,
+  colorBgContainerDisabled: palette.gray[900],
+  colorFill: palette.gray[700],
+  colorFillSecondary: palette.gray[800],
+  colorFillTertiary: palette.gray[900],
+  colorFillQuaternary: palette.gray[950],
+  colorFillAlter: palette.gray[950],
+  colorTextBase: palette.white,
+  colorText: palette.white,
+  colorTextSecondary: palette.gray[300],
+  colorTextTertiary: palette.gray[400],
+  colorTextQuaternary: palette.gray[500],
+  colorTextDisabled: palette.gray[500],
+  colorBorder: palette.gray[700],
+  colorBorderSecondary: palette.gray[800],
+  colorSplit: palette.gray[800],
+} satisfies ThemeConfig["token"]
+
+/** Ant Design themes derived from the same design tokens used by CSS. */
 export const restTheme: ThemeConfig = {
   token: {
     fontFamily,
@@ -52,7 +97,7 @@ export const restTheme: ThemeConfig = {
       borderRadiusLG: radius.lg,
     },
     Upload: {
-      colorFillAlter: "transparent",
+      colorFillAlter: palette.transparent,
     },
   },
 }
@@ -60,11 +105,9 @@ export const restTheme: ThemeConfig = {
 export const lightTheme: ThemeConfig = {
   algorithm: theme.defaultAlgorithm,
   token: merge({}, restTheme.token, {
+    ...lightNeutralTokens,
     colorPrimary: semantic.light.primary,
     colorInfo: semantic.light.primary,
-    colorFillAlter: palette.offWhite,
-    colorText: palette.black,
-    colorBorder: palette.gray[300],
   }),
   components: merge({}, restTheme.components, {
     Button: {
@@ -73,11 +116,6 @@ export const lightTheme: ThemeConfig = {
       colorFillTertiary: palette.gray[100],
       borderColorDisabled: palette.gray[100],
       colorBgContainerDisabled: palette.gray[100],
-      defaultBg: palette.gray[100],
-      defaultHoverBg: palette.gray[200],
-      defaultBorderColor: palette.gray[100],
-      defaultHoverBorderColor: palette.gray[200],
-      defaultHoverColor: semantic.light.primary,
     },
     Modal: {
       colorBgMask: "rgba(240, 240, 242, .8)",
@@ -103,21 +141,21 @@ export const lightTheme: ThemeConfig = {
     Table: {
       borderColor: palette.gray[100],
       rowHoverBg: palette.gray[100],
-      headerSortHoverBg: palette.gray[200],
-      headerSortActiveBg: palette.gray[200],
-      headerBg: "transparent",
-      bodySortBg: "transparent",
-      colorBgContainer: "transparent",
+      headerSortHoverBg: palette.gray[100],
+      headerSortActiveBg: palette.gray[100],
+      headerBg: palette.transparent,
+      bodySortBg: palette.transparent,
+      colorBgContainer: palette.transparent,
     },
     Spin: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
     },
     Pagination: {
       itemBg: palette.gray[100],
       colorBgTextHover: palette.gray[200],
     },
     Drawer: {
-      colorBgElevated: palette.offWhite,
+      colorBgElevated: palette.white,
       colorBgMask: "rgba(250, 250, 252, .6)",
       boxShadowDrawerLeft: "none",
       boxShadowDrawerRight: "none",
@@ -130,41 +168,37 @@ export const lightTheme: ThemeConfig = {
 export const darkTheme: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: merge({}, restTheme.token, {
+    ...darkNeutralTokens,
     colorPrimary: semantic.dark.primary,
     colorInfo: semantic.dark.primary,
-    colorFillAlter: palette.black,
-    colorText: palette.offWhite,
-    colorBorder: palette.gray[700],
   }),
   components: merge({}, restTheme.components, {
     Button: {
       colorFill: palette.gray[800],
       colorFillSecondary: palette.gray[800],
       colorFillTertiary: palette.gray[900],
+      defaultBg: palette.black,
+      defaultHoverBg: palette.black,
+      defaultBorderColor: palette.gray[700],
       borderColorDisabled: palette.gray[900],
       colorBgContainerDisabled: palette.gray[900],
-      defaultBg: palette.gray[800],
-      defaultHoverBg: palette.gray[700],
-      defaultBorderColor: palette.gray[800],
-      defaultHoverBorderColor: palette.gray[700],
-      defaultHoverColor: paletteDark.blue[300],
     },
     Tabs: {
-      itemActiveColor: palette.offWhite,
-      itemSelectedColor: palette.offWhite,
-      inkBarColor: palette.offWhite,
+      itemActiveColor: palette.white,
+      itemSelectedColor: palette.white,
+      inkBarColor: palette.white,
       itemHoverColor: palette.gray[300],
     },
     Tag: {
-      defaultBg: "transparent",
+      defaultBg: palette.transparent,
     },
     Input: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.black,
       colorBgContainerDisabled: palette.gray[900],
       colorTextDisabled: palette.gray[500],
     },
     InputNumber: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.black,
       colorBgContainerDisabled: palette.gray[900],
       colorTextDisabled: palette.gray[500],
     },
@@ -180,10 +214,10 @@ export const darkTheme: ThemeConfig = {
       colorBgElevated: palette.gray[800],
     },
     Select: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
       colorBgContainerDisabled: palette.gray[900],
       colorTextDisabled: palette.gray[500],
-      selectorBg: "transparent",
+      selectorBg: palette.black,
       colorBgElevated: palette.gray[800],
       boxShadow: semantic.dark.popupShadow,
     },
@@ -197,16 +231,16 @@ export const darkTheme: ThemeConfig = {
     },
     Tooltip: {
       colorTextLightSolid: palette.black,
-      colorBgSpotlight: palette.offWhite,
+      colorBgSpotlight: palette.white,
       boxShadow: semantic.dark.popupShadow,
     },
     Radio: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
       colorBgContainerDisabled: palette.gray[900],
       colorTextDisabled: palette.gray[500],
     },
     Checkbox: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
       colorBgContainerDisabled: palette.gray[900],
       colorTextDisabled: palette.gray[500],
     },
@@ -217,21 +251,21 @@ export const darkTheme: ThemeConfig = {
     Table: {
       borderColor: palette.gray[800],
       rowHoverBg: palette.gray[900],
-      headerSortHoverBg: palette.gray[800],
-      headerSortActiveBg: palette.gray[800],
-      headerBg: "transparent",
-      bodySortBg: "transparent",
-      colorBgContainer: "transparent",
+      headerSortHoverBg: palette.gray[900],
+      headerSortActiveBg: palette.gray[900],
+      headerBg: palette.transparent,
+      bodySortBg: palette.transparent,
+      colorBgContainer: palette.transparent,
     },
     Spin: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
     },
     Pagination: {
       itemBg: palette.gray[800],
       colorBgTextHover: palette.gray[600],
     },
     Collapse: {
-      colorBgContainer: "transparent",
+      colorBgContainer: palette.transparent,
     },
     Drawer: {
       colorBgElevated: palette.black,

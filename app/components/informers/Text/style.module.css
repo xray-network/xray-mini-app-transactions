@@ -16,7 +16,7 @@
 }
 
 .body {
-  @apply flex text-black;
+  @apply flex text-black font-mono;
   @apply dark:text-white;
 }
 

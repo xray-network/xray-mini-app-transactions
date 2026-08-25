@@ -79,6 +79,7 @@ export const restTheme: ThemeConfig = {
       fontSizeSM: 14,
       fontSize: 14,
       fontSizeLG: 14,
+      lineHeightLG: 24 / 14,
     },
     Switch: {
       fontSizeSM: 14,

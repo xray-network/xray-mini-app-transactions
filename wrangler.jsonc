@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "xray-mini-app-transactions",
+	"name": "xray-mini-app-cardano-transactions",
 	"compatibility_date": "2025-04-04",
 	"pages_build_output_dir": "./build/client"
 	// "vars": {

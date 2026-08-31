@@ -13,7 +13,7 @@
 }
 
 .ant-modal-title {
-  @apply text-2xl!;
+  @apply text-2xl! font-bold!;
 }
 
 .ant-modal-close {
@@ -21,9 +21,13 @@
   right: auto;
 }
 
-.ant-modal-content {
+.ant-modal-container {
   @apply border-0! pt-15!;
   @apply dark:border-gray-700!;
+}
+
+.ant-modal-confirm-confirm .ant-modal-container {
+  @apply pt-10!;
 }
 
 .ant-modal-wrap {

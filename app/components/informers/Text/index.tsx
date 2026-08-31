@@ -19,7 +19,9 @@ const InformerText = ({
   return (
     <div className={classNames(style.informer)}>
       <div className={style.body}>
-        <strong>{value}</strong>
+        <span className={style.value} title={typeof value === "string" ? value : undefined}>
+          {value}
+        </span>
         {copy && (
           <span className={style.copy}>
             <Copy copy={copy}>

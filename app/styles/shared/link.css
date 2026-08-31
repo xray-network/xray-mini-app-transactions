@@ -4,4 +4,6 @@ a,
 .shared-link {
   @apply decoration-0 text-blue-500 transition-colors;
   @apply hover:text-blue-400;
+  @apply dark:text-blue-400;
+  @apply dark:hover:text-blue-300;
 }

@@ -1,0 +1,5 @@
+@import "@/styles/tailwind.css";
+
+.ant-collapse-body {
+  @apply px-0!;
+}

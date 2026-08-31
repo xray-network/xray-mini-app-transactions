@@ -10,7 +10,7 @@
   transform: rotate(0deg);
   opacity: 0;
   transition: opacity 0.25s ease-in-out;
-  @apply block absolute -top-1 -left-1 w-4 h-4 rounded-full border-2 border-transparent border-t-2 border-t-green-500;
+  @apply block absolute -top-0.75 -left-0.75 w-3.5 h-3.5 rounded-full border-2 border-transparent border-t-2 border-t-green-500;
 }
 
 .shared-dot-animate:before {

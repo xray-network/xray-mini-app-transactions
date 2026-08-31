@@ -3,3 +3,7 @@
 .ant-tabs-dropdown-menu {
   @apply dark:bg-gray-700!;
 }
+
+.ant-tabs-tab-btn {
+  @apply text-shadow-none!;
+}

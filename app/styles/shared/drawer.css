@@ -1,5 +1,9 @@
 @import "@/styles/tailwind.css";
 
 .shared-drawer-menu .ant-drawer-body {
-  @apply p-0! bg-transparent!;
+  @apply p-0!;
+}
+
+.shared-drawer-menu .ant-drawer-content {
+  @apply bg-transparent!;
 }

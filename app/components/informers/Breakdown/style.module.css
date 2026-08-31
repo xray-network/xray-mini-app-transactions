@@ -13,6 +13,7 @@
 
 .item {
   @apply flex items-center flex-nowrap;
+  white-space: nowrap;
 }
 
 .title {
@@ -24,5 +25,5 @@
 }
 
 .quantity {
-  @apply flex flex-nowrap ml-auto;
+  @apply flex flex-nowrap ml-auto font-mono text-sm;
 }

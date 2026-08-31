@@ -2,6 +2,7 @@
 
 .dropdown {
   @apply p-3 rounded-lg bg-white dark:bg-gray-800;
+  white-space: nowrap;
   box-shadow:
     0 5.32px 14px 0 rgba(0, 0, 0, 0.08),
     0 2.66px 5.32px -3.5px rgba(0, 0, 0, 0.12),
@@ -10,6 +11,7 @@
 
 .dropdownSelector {
   @apply relative z-10 h-10 px-2 border border-gray-200 dark:border-gray-800 flex rounded-lg items-center justify-center transition-colors duration-300 ease-in-out cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-blue-500;
+  white-space: nowrap;
 }
 
 .dropdownSelectorActive {

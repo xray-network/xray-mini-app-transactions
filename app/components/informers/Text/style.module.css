@@ -3,6 +3,7 @@
 .informer {
   @apply min-w-0;
   line-height: 1.3;
+  white-space: nowrap;
 }
 
 .title {
@@ -17,12 +18,11 @@
 }
 
 .body {
-  @apply flex min-w-0 text-black;
-  @apply dark:text-white;
+  @apply flex min-w-0;
 }
 
 .value {
-  @apply min-w-0 whitespace-normal break-all;
+  @apply min-w-0 overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
 .copy {

@@ -2,6 +2,7 @@
 
 .informer {
   line-height: 1.3;
+  white-space: nowrap;
 }
 
 .title {
@@ -16,8 +17,7 @@
 }
 
 .body {
-  @apply flex text-black font-mono;
-  @apply dark:text-white;
+  @apply flex font-mono;
 }
 
 .copy {

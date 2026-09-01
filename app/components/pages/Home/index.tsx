@@ -165,17 +165,17 @@ const GeneralAndBlockInfo = ({
                     value={
                       <>
                         {tipBlock <= 3 && (
-                          <Tag color="danger" className="font-size-12">
+                          <Tag color="danger" className="font-size-12 me-2!">
                             Low
                           </Tag>
                         )}
                         {tipBlock > 3 && tipBlock <= 9 && (
-                          <Tag color="warning" className="font-size-12">
+                          <Tag color="warning" className="font-size-12 me-2!">
                             Medium
                           </Tag>
                         )}
                         {tipBlock > 9 && (
-                          <Tag color="success" className="font-size-12">
+                          <Tag color="success" className="font-size-12 me-2!">
                             High
                           </Tag>
                         )}

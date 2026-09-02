@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Col, Row, Tabs } from "antd"
+import { Col, Row, Tabs, Tag } from "antd"
 import {
   ArrowRightIcon,
   BanknotesIcon,
@@ -7,6 +7,7 @@ import {
   CodeBracketIcon,
   DocumentDuplicateIcon,
   DocumentTextIcon,
+  HashtagIcon,
   IdentificationIcon,
   LinkIcon,
   ShieldCheckIcon,
@@ -14,6 +15,8 @@ import {
 import Copy from "@/components/common/Copy"
 import Empty from "@/components/common/Empty"
 import Informers from "@/components/informers"
+import type { CardanoTypes } from "@/types"
+import * as Utils from "@/utils"
 import type { TransactionInfo, TransactionOutput } from "./transactionTypes"
 import style from "./style.module.css"
 
@@ -28,25 +31,6 @@ const isEmptyValue = (value: unknown): boolean =>
 
 const asTransactionOutputs = (value: unknown): TransactionOutput[] =>
   Array.isArray(value) ? (value.filter(isRecord) as TransactionOutput[]) : []
-
-const humanizeKey = (key: string): string => {
-  const abbreviations: Record<string, string> = {
-    ada: "ADA",
-    cbor: "CBOR",
-    drep: "DRep",
-    id: "ID",
-    tx: "Tx",
-    url: "URL",
-    utxo: "UTxO",
-  }
-
-  return key
-    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-    .split(/[_\s-]+/)
-    .filter(Boolean)
-    .map((part) => abbreviations[part.toLowerCase()] ?? `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
-    .join(" ")
-}
 
 const scalarText = (value: unknown): string => {
   if (value === null || value === undefined || value === "") return "—"
@@ -81,6 +65,13 @@ const SectionTitle = ({ icon, children }: { icon: ReactNode; children: ReactNode
   </div>
 )
 
+const TabLabel = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
+  <span className={style.tabLabel}>
+    {icon}
+    <strong>{children}</strong>
+  </span>
+)
+
 const EmptySection = ({ name }: { name: string }) => (
   <div className={style.emptySection}>
     <Empty title={`No ${name}`} descr={`This transaction does not contain ${name.toLowerCase()}.`} />
@@ -96,70 +87,107 @@ const ScalarValue = ({ value }: { value: unknown }) => {
   )
 }
 
-const StructuredValue = ({ value, depth = 0 }: { value: unknown; depth?: number }) => {
-  if (Array.isArray(value)) {
-    if (value.length === 0) return <span className="text-gray-500">—</span>
-    return (
-      <div className={style.nestedList}>
-        {value.map((item, index) => (
-          <div key={index} className={style.nestedItem}>
-            <div className={style.itemIndex}>#{index + 1}</div>
-            <StructuredValue value={item} depth={depth + 1} />
-          </div>
-        ))}
-      </div>
-    )
-  }
+type JsonLabelVariant = "muted" | "regular"
 
-  if (isRecord(value)) {
-    const entries = Object.entries(value)
-    if (entries.length === 0) return <span className="text-gray-500">—</span>
-    const scalarEntries = entries.filter(([, child]) => !Array.isArray(child) && !isRecord(child))
-    const nestedEntries = entries.filter(([, child]) => Array.isArray(child) || isRecord(child))
+const JsonEditor = ({
+  value,
+  label,
+  labelVariant = "muted",
+  raw = false,
+}: {
+  value: unknown
+  label?: ReactNode
+  labelVariant?: JsonLabelVariant
+  raw?: boolean
+}) => {
+  const json = typeof value === "string" ? value : safeJson(value)
 
-    return (
-      <div className={style.structuredRecord}>
-        {scalarEntries.length > 0 && (
-          <Informers.Breakdown
-            compact={depth > 0}
-            items={scalarEntries.map(([key, child]) => ({
-              title: humanizeKey(key),
-              children: <ScalarValue value={child} />,
-            }))}
+  return (
+    <>
+      <div className={style.jsonToolbar}>
+        {label && <span className={labelVariant === "regular" ? style.jsonLabel : style.cardIndex}>{label}</span>}
+        <Copy copy={json}>
+          <DocumentDuplicateIcon
+            aria-label="Copy JSON"
+            className="size-4 cursor-pointer text-gray-500 hover:text-blue-500 transition-colors"
+            strokeWidth={2}
           />
-        )}
-        {nestedEntries.map(([key, child]) => (
-          <div key={key} className={style.nestedBlock}>
-            <div className={style.nestedTitle}>{humanizeKey(key)}</div>
-            <StructuredValue value={child} depth={depth + 1} />
-          </div>
-        ))}
+        </Copy>
       </div>
-    )
-  }
-
-  return <ScalarValue value={value} />
+      <textarea
+        aria-label={raw ? "Complete Koios transaction JSON" : "JSON data"}
+        className={`${style.jsonTextarea} ${raw ? style.rawTextarea : ""}`}
+        readOnly
+        spellCheck={false}
+        value={json}
+      />
+    </>
+  )
 }
 
-const StructuredData = ({ value, emptyName }: { value: unknown; emptyName: string }) => {
+const JsonTextarea = ({
+  value,
+  label,
+  labelVariant = "muted",
+  raw = false,
+}: {
+  value: unknown
+  label?: ReactNode
+  labelVariant?: JsonLabelVariant
+  raw?: boolean
+}) => (
+  <div className="shared-box mb-3">
+    <div className={`shared-box-inner bg-gray-100! dark:bg-gray-950! ${style.jsonCardInner}`}>
+      <JsonEditor value={value} label={label} labelVariant={labelVariant} raw={raw} />
+    </div>
+  </div>
+)
+
+const JsonData = ({
+  value,
+  emptyName,
+  label,
+  labelVariant = "muted",
+}: {
+  value: unknown
+  emptyName: string
+  label?: string
+  labelVariant?: JsonLabelVariant
+}) => {
   if (isEmptyValue(value)) return <EmptySection name={emptyName} />
   const values = Array.isArray(value) ? value : [value]
 
   return (
     <div className={style.dataGrid}>
       {values.map((item, index) => (
-        <div key={index} className="shared-box">
-          <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
-            {values.length > 1 && <div className={style.cardIndex}>#{index + 1}</div>}
-            <StructuredValue value={item} />
-          </div>
-        </div>
+        <JsonTextarea
+          key={index}
+          value={item}
+          label={
+            label
+              ? `${label}${values.length > 1 ? ` #${index + 1}` : ""}`
+              : values.length > 1
+                ? `#${index + 1}`
+                : undefined
+          }
+          labelVariant={labelVariant}
+        />
       ))}
     </div>
   )
 }
 
-const UtxoCard = ({ utxo, extended = false }: { utxo: TransactionOutput; extended?: boolean }) => (
+const UtxoCard = ({
+  utxo,
+  extended = false,
+  jsonDetails,
+  jsonLabel,
+}: {
+  utxo: TransactionOutput
+  extended?: boolean
+  jsonDetails?: unknown
+  jsonLabel?: string
+}) => (
   <div className="shared-box mb-3">
     <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
       <Informers.Explorer type="paymentAddress" value={utxo.payment_addr?.bech32 || ""} />
@@ -188,20 +216,23 @@ const UtxoCard = ({ utxo, extended = false }: { utxo: TransactionOutput; extende
       />
       {extended && !isEmptyValue(utxo.datum_hash) && (
         <div className={style.utxoDetail}>
-          <div className={style.nestedTitle}>Datum Hash</div>
+          <div className={style.fieldTitle}>Datum Hash</div>
           <ScalarValue value={utxo.datum_hash} />
         </div>
       )}
       {extended && !isEmptyValue(utxo.inline_datum) && (
         <div className={style.utxoDetail}>
-          <div className={style.nestedTitle}>Inline Datum</div>
-          <StructuredValue value={utxo.inline_datum} />
+          <JsonEditor value={utxo.inline_datum} label="Inline Datum" />
         </div>
       )}
       {extended && !isEmptyValue(utxo.reference_script) && (
         <div className={style.utxoDetail}>
-          <div className={style.nestedTitle}>Reference Script</div>
-          <StructuredValue value={utxo.reference_script} />
+          <JsonEditor value={utxo.reference_script} label="Reference Script" />
+        </div>
+      )}
+      {jsonDetails !== undefined && (
+        <div className={style.utxoDetail}>
+          <JsonEditor value={jsonDetails} label={jsonLabel} labelVariant="regular" />
         </div>
       )}
     </div>
@@ -227,6 +258,139 @@ const UtxoList = ({
     <EmptySection name={emptyName} />
   )
 
+const TxInfoTab = ({
+  transaction,
+  network,
+  tipBlock,
+}: {
+  transaction: TransactionInfo
+  network: CardanoTypes.NetworkName | undefined
+  tipBlock: number
+}) => {
+  const confirmations = Math.max(0, tipBlock - Number(transaction.block_height || 0))
+  const ttl =
+    transaction.invalid_after && network
+      ? new Date(Utils.slotToUnixTime(Number(transaction.invalid_after), network) || 0).toLocaleString()
+      : "—"
+  const timestamp = transaction.tx_timestamp ? new Date(Number(transaction.tx_timestamp) * 1000).toLocaleString() : "—"
+
+  return (
+    <Row gutter={24}>
+      <Col xs={24} sm={12}>
+        <SectionTitle icon={<HashtagIcon className="size-5" strokeWidth={2} />}>General Info</SectionTitle>
+        <div className="shared-box mb-3">
+          <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
+            <Informers.Breakdown
+              items={[
+                {
+                  title: "Tx Hash",
+                  children: (
+                    <Informers.Text
+                      value={Utils.truncate(transaction.tx_hash || "")}
+                      copy={transaction.tx_hash || ""}
+                    />
+                  ),
+                },
+                {
+                  title: "Tx Index",
+                  children: (
+                    <Informers.Text
+                      value={Utils.quantityWithCommas(transaction.tx_block_index || "0")}
+                      copy={(transaction.tx_block_index || "0").toString()}
+                    />
+                  ),
+                },
+                { title: "TTL", children: <Informers.Text value={ttl} copy={ttl === "—" ? undefined : ttl} /> },
+                {
+                  title: "Size (Bytes)",
+                  children: (
+                    <Informers.Text
+                      value={Utils.quantityWithCommas(transaction.tx_size || "0")}
+                      copy={(transaction.tx_size || "0").toString()}
+                    />
+                  ),
+                },
+                { title: "Total Output", children: <Informers.Ada value={transaction.total_output || "0"} /> },
+                { title: "Fee", children: <Informers.Ada value={transaction.fee || "0"} /> },
+              ]}
+            />
+          </div>
+        </div>
+      </Col>
+      <Col xs={24} sm={12}>
+        <SectionTitle icon={<CircleStackIcon className="size-5" strokeWidth={2} />}>Block Info</SectionTitle>
+        <div className="shared-box mb-3">
+          <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
+            <Informers.Breakdown
+              items={[
+                {
+                  title: "Block Hash",
+                  children: (
+                    <Informers.Text
+                      value={Utils.truncate(transaction.block_hash || "")}
+                      copy={transaction.block_hash || ""}
+                    />
+                  ),
+                },
+                {
+                  title: "Block",
+                  children: (
+                    <Informers.Text
+                      value={Utils.quantityWithCommas(transaction.block_height || "0")}
+                      copy={(transaction.block_height || "0").toString()}
+                    />
+                  ),
+                },
+                {
+                  title: "Epoch / Slot",
+                  children: (
+                    <Informers.Text
+                      value={`${Utils.quantityWithCommas(transaction.epoch_no || "0")} / ${Utils.quantityWithCommas(transaction.epoch_slot || "0")}`}
+                      copy={`${transaction.epoch_no || "0"} / ${transaction.epoch_slot || "0"}`}
+                    />
+                  ),
+                },
+                {
+                  title: "Absolute Slot",
+                  children: (
+                    <Informers.Text
+                      value={Utils.quantityWithCommas(transaction.absolute_slot || "0")}
+                      copy={(transaction.absolute_slot || "0").toString()}
+                    />
+                  ),
+                },
+                {
+                  title: "Timestamp",
+                  children: <Informers.Text value={timestamp} copy={timestamp === "—" ? undefined : timestamp} />,
+                },
+                {
+                  title: "Confirmations",
+                  children: (
+                    <Informers.Text
+                      value={
+                        <>
+                          <Tag
+                            color={confirmations <= 3 ? "danger" : confirmations <= 9 ? "warning" : "success"}
+                            className="font-size-12 me-2!"
+                          >
+                            {confirmations <= 3 ? "Low" : confirmations <= 9 ? "Medium" : "High"}
+                          </Tag>
+                          {Utils.quantityWithCommas(confirmations)}
+                        </>
+                      }
+                      copy={confirmations.toString()}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </Col>
+    </Row>
+  )
+}
+
 const UtxoTab = ({ transaction }: { transaction: TransactionInfo }) => (
   <Row gutter={24}>
     <Col xs={24} sm={12}>
@@ -234,9 +398,7 @@ const UtxoTab = ({ transaction }: { transaction: TransactionInfo }) => (
       <UtxoList items={transaction.inputs ?? []} emptyName="inputs" />
     </Col>
     <Col xs={24} sm={12}>
-      <SectionTitle icon={null}>
-        Outputs <ArrowRightIcon className="size-5" strokeWidth={2} />
-      </SectionTitle>
+      <SectionTitle icon={<ArrowRightIcon className="size-5" strokeWidth={2} />}>Outputs</SectionTitle>
       <UtxoList items={transaction.outputs ?? []} emptyName="outputs" />
     </Col>
   </Row>
@@ -248,11 +410,11 @@ const CollateralTab = ({ transaction }: { transaction: TransactionInfo }) => {
   return (
     <Row gutter={24}>
       <Col xs={24} sm={12}>
-        <SectionTitle icon={<ShieldCheckIcon className="size-5" strokeWidth={2} />}>Collateral Inputs</SectionTitle>
+        <SectionTitle icon={<ArrowRightIcon className="size-5" strokeWidth={2} />}>Collateral Inputs</SectionTitle>
         <UtxoList items={transaction.collateral_inputs ?? []} emptyName="collateral inputs" extended />
       </Col>
       <Col xs={24} sm={12}>
-        <SectionTitle icon={<ShieldCheckIcon className="size-5" strokeWidth={2} />}>Collateral Output</SectionTitle>
+        <SectionTitle icon={<ArrowRightIcon className="size-5" strokeWidth={2} />}>Collateral Output</SectionTitle>
         <UtxoList items={collateralOutput} emptyName="collateral output" extended />
       </Col>
     </Row>
@@ -260,57 +422,116 @@ const CollateralTab = ({ transaction }: { transaction: TransactionInfo }) => {
 }
 
 const ContractsTab = ({ transaction }: { transaction: TransactionInfo }) => (
-  <Row gutter={24}>
-    <Col xs={24} sm={12}>
-      <SectionTitle icon={<CodeBracketIcon className="size-5" strokeWidth={2} />}>Native Scripts</SectionTitle>
-      <StructuredData value={transaction.native_scripts} emptyName="native scripts" />
-    </Col>
-    <Col xs={24} sm={12}>
-      <SectionTitle icon={<CodeBracketIcon className="size-5" strokeWidth={2} />}>Plutus Contracts</SectionTitle>
-      <StructuredData value={transaction.plutus_contracts} emptyName="Plutus contracts" />
-    </Col>
-  </Row>
+  <>
+    <JsonData
+      value={transaction.native_scripts}
+      emptyName="native scripts"
+      label="Native Scripts"
+      labelVariant="regular"
+    />
+    <JsonData
+      value={transaction.plutus_contracts}
+      emptyName="Plutus contracts"
+      label="Plutus Contracts"
+      labelVariant="regular"
+    />
+  </>
 )
 
-const WithdrawalsTab = ({ value }: { value: unknown }) => {
-  if (isEmptyValue(value)) return <EmptySection name="withdrawals" />
-  if (!Array.isArray(value) || value.some((item) => !isRecord(item))) {
-    return <StructuredData value={value} emptyName="withdrawals" />
+const InputRefsTab = ({ transaction }: { transaction: TransactionInfo }) => {
+  const references = transaction.reference_inputs ?? []
+  if (references.length === 0) return <EmptySection name="reference inputs" />
+
+  return (
+    <>
+      {references.map((reference, index) => (
+        <UtxoCard
+          key={`${reference.tx_hash}-${reference.tx_index}-${index}`}
+          utxo={reference}
+          jsonLabel="InputRef Details"
+          jsonDetails={{
+            datum_hash: reference.datum_hash,
+            inline_datum: reference.inline_datum,
+            reference_script: reference.reference_script,
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
+const MetadataTab = ({ value }: { value: unknown }) => {
+  if (isEmptyValue(value)) return <EmptySection name="metadata" />
+  const metadata = isRecord(value) && "metadata" in value ? value.metadata : value
+
+  if (isRecord(metadata)) {
+    return (
+      <div className={style.dataGrid}>
+        {Object.entries(metadata).map(([index, item]) => (
+          <JsonTextarea
+            key={index}
+            value={item}
+            label={
+              <Tag className="mb-0!" color="blue">
+                {index}
+              </Tag>
+            }
+          />
+        ))}
+      </div>
+    )
   }
+
+  return <JsonData value={metadata} emptyName="metadata" />
+}
+
+const WithdrawalsTab = ({ transaction }: { transaction: TransactionInfo }) => {
+  const value = transaction.withdrawals
+  if (isEmptyValue(value)) return <EmptySection name="withdrawals" />
+  const withdrawals = Array.isArray(value) ? value.filter(isRecord) : isRecord(value) ? [value] : []
+  if (withdrawals.length === 0) return <EmptySection name="withdrawals" />
 
   return (
     <div className={style.dataGrid}>
-      {value.map((withdrawal, index) => {
-        const stakeAddress = scalarText(withdrawal.stake_address ?? withdrawal.stake_addr)
+      {withdrawals.map((withdrawal, index) => {
+        const rewardAccount = scalarText(withdrawal.reward_account ?? withdrawal.stake_address ?? withdrawal.stake_addr)
         const amount = scalarText(withdrawal.amount ?? withdrawal.value)
-        const details = Object.fromEntries(
-          Object.entries(withdrawal).filter(
-            ([key]) => !["stake_address", "stake_addr", "amount", "value"].includes(key)
-          )
+        const stakeKeyType = scalarText(
+          withdrawal.stake_key_type ?? withdrawal.stake_credential_type ?? withdrawal.credential_type ?? "Key"
         )
+        const explicitReceivingAddress = scalarText(
+          withdrawal.receiving_address ?? withdrawal.receiving_addr ?? withdrawal.payment_address
+        )
+        const outputAddress = transaction.outputs?.find(
+          (output) => output.stake_addr && output.stake_addr === rewardAccount
+        )?.payment_addr?.bech32
+        const receivingAddress = explicitReceivingAddress === "—" ? outputAddress : explicitReceivingAddress
+
         return (
           <div key={index} className="shared-box">
             <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
-              <Informers.Explorer
-                type="stakingAddress"
-                value={stakeAddress === "—" ? undefined : stakeAddress}
-                title="Stake Address"
+              <Informers.Breakdown
+                items={[
+                  {
+                    title: "Reward Account",
+                    children: (
+                      <Informers.Explorer
+                        type="stakingAddress"
+                        value={rewardAccount === "—" ? undefined : rewardAccount}
+                      />
+                    ),
+                  },
+                  { title: "Stake Key Type", children: <ScalarValue value={stakeKeyType} /> },
+                  {
+                    title: "Amount",
+                    children: <Informers.Ada value={amount === "—" ? "0" : amount} />,
+                  },
+                  {
+                    title: "Receiving Address",
+                    children: <Informers.Explorer type="paymentAddress" value={receivingAddress} />,
+                  },
+                ]}
               />
-              <div className="mt-3">
-                <Informers.Breakdown
-                  items={[
-                    {
-                      title: "Amount",
-                      children: <Informers.Ada value={amount === "—" ? "0" : amount} />,
-                    },
-                  ]}
-                />
-              </div>
-              {!isEmptyValue(details) && (
-                <div className={style.utxoDetail}>
-                  <StructuredValue value={details} />
-                </div>
-              )}
             </div>
           </div>
         )
@@ -322,7 +543,7 @@ const WithdrawalsTab = ({ value }: { value: unknown }) => {
 const MintTab = ({ value }: { value: unknown }) => {
   if (isEmptyValue(value)) return <EmptySection name="minted or burned assets" />
   if (!Array.isArray(value) || value.some((item) => !isRecord(item))) {
-    return <StructuredData value={value} emptyName="minted or burned assets" />
+    return <JsonData value={value} emptyName="minted or burned assets" />
   }
 
   return (
@@ -373,92 +594,115 @@ const MintTab = ({ value }: { value: unknown }) => {
 
 const RawTab = ({ transaction }: { transaction: TransactionInfo }) => {
   const raw = safeJson(transaction)
-  return (
-    <div className="shared-box">
-      <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
-        <div className={style.rawToolbar}>
-          <strong>Complete Koios Transaction</strong>
-          <Copy copy={raw}>
-            <span className="shared-link cursor-pointer inline-flex items-center">
-              <DocumentDuplicateIcon className="size-4 me-1" strokeWidth={2} />
-              Copy JSON
-            </span>
-          </Copy>
-        </div>
-        <pre className={style.rawCode}>{raw}</pre>
-      </div>
-    </div>
-  )
+  return <JsonTextarea value={raw} label="Complete Koios Transaction" labelVariant="regular" raw />
 }
 
-export default function TransactionDetails({ transaction }: { transaction: TransactionInfo }) {
+export default function TransactionDetails({
+  transaction,
+  network,
+  tipBlock,
+}: {
+  transaction: TransactionInfo
+  network: CardanoTypes.NetworkName | undefined
+  tipBlock: number
+}) {
+  const metadata =
+    isRecord(transaction.metadata) && "metadata" in transaction.metadata
+      ? transaction.metadata.metadata
+      : transaction.metadata
+  const hasUtxos = !isEmptyValue(transaction.inputs) || !isEmptyValue(transaction.outputs)
+  const hasContracts = !isEmptyValue(transaction.native_scripts) || !isEmptyValue(transaction.plutus_contracts)
+  const hasCollateral = !isEmptyValue(transaction.collateral_inputs) || !isEmptyValue(transaction.collateral_output)
+
   return (
     <Tabs
       destroyOnHidden
       className={style.detailTabs}
       items={[
-        { key: "utxos", label: <strong>UTXOs</strong>, children: <UtxoTab transaction={transaction} /> },
         {
-          key: "metadata",
-          label: <strong>Metadata</strong>,
-          children: (
-            <>
-              <SectionTitle icon={<DocumentTextIcon className="size-5" strokeWidth={2} />}>Metadata</SectionTitle>
-              <StructuredData value={transaction.metadata} emptyName="metadata" />
-            </>
-          ),
+          key: "tx_info",
+          label: <TabLabel icon={<HashtagIcon className="size-4" strokeWidth={2} />}>Tx Info</TabLabel>,
+          children: <TxInfoTab transaction={transaction} network={network} tipBlock={tipBlock} />,
         },
+        ...(hasUtxos
+          ? [
+              {
+                key: "utxos",
+                label: <TabLabel icon={<ArrowRightIcon className="size-4" strokeWidth={2} />}>UTXOs</TabLabel>,
+                children: <UtxoTab transaction={transaction} />,
+              },
+            ]
+          : []),
+        ...(!isEmptyValue(metadata)
+          ? [
+              {
+                key: "metadata",
+                label: <TabLabel icon={<DocumentTextIcon className="size-4" strokeWidth={2} />}>Metadata</TabLabel>,
+                children: <MetadataTab value={transaction.metadata} />,
+              },
+            ]
+          : []),
+        ...(!isEmptyValue(transaction.withdrawals)
+          ? [
+              {
+                key: "withdrawals",
+                label: <TabLabel icon={<BanknotesIcon className="size-4" strokeWidth={2} />}>Withdrawals</TabLabel>,
+                children: <WithdrawalsTab transaction={transaction} />,
+              },
+            ]
+          : []),
+        ...(!isEmptyValue(transaction.certificates)
+          ? [
+              {
+                key: "certificates",
+                label: (
+                  <TabLabel icon={<IdentificationIcon className="size-4" strokeWidth={2} />}>Certificates</TabLabel>
+                ),
+                children: <JsonData value={transaction.certificates} emptyName="certificates" />,
+              },
+            ]
+          : []),
+        ...(hasContracts
+          ? [
+              {
+                key: "contracts",
+                label: <TabLabel icon={<CodeBracketIcon className="size-4" strokeWidth={2} />}>Contracts</TabLabel>,
+                children: <ContractsTab transaction={transaction} />,
+              },
+            ]
+          : []),
+        ...(!isEmptyValue(transaction.assets_minted)
+          ? [
+              {
+                key: "token_mint",
+                label: <TabLabel icon={<CircleStackIcon className="size-4" strokeWidth={2} />}>TokenMint</TabLabel>,
+                children: <MintTab value={transaction.assets_minted} />,
+              },
+            ]
+          : []),
+        ...(hasCollateral
+          ? [
+              {
+                key: "collateral",
+                label: <TabLabel icon={<ShieldCheckIcon className="size-4" strokeWidth={2} />}>Collateral</TabLabel>,
+                children: <CollateralTab transaction={transaction} />,
+              },
+            ]
+          : []),
+        ...(!isEmptyValue(transaction.reference_inputs)
+          ? [
+              {
+                key: "reference_inputs",
+                label: <TabLabel icon={<LinkIcon className="size-4" strokeWidth={2} />}>InputRefs</TabLabel>,
+                children: <InputRefsTab transaction={transaction} />,
+              },
+            ]
+          : []),
         {
-          key: "withdrawals",
-          label: <strong>Withdrawals</strong>,
-          children: (
-            <>
-              <SectionTitle icon={<BanknotesIcon className="size-5" strokeWidth={2} />}>
-                Reward Withdrawals
-              </SectionTitle>
-              <WithdrawalsTab value={transaction.withdrawals} />
-            </>
-          ),
+          key: "raw",
+          label: <TabLabel icon={<DocumentDuplicateIcon className="size-4" strokeWidth={2} />}>Raw</TabLabel>,
+          children: <RawTab transaction={transaction} />,
         },
-        {
-          key: "certificates",
-          label: <strong>Certificates</strong>,
-          children: (
-            <>
-              <SectionTitle icon={<IdentificationIcon className="size-5" strokeWidth={2} />}>Certificates</SectionTitle>
-              <StructuredData value={transaction.certificates} emptyName="certificates" />
-            </>
-          ),
-        },
-        { key: "contracts", label: <strong>Contracts</strong>, children: <ContractsTab transaction={transaction} /> },
-        {
-          key: "token_mint",
-          label: <strong>TokenMint</strong>,
-          children: (
-            <>
-              <SectionTitle icon={<CircleStackIcon className="size-5" strokeWidth={2} />}>
-                Minted and Burned Assets
-              </SectionTitle>
-              <MintTab value={transaction.assets_minted} />
-            </>
-          ),
-        },
-        {
-          key: "collateral",
-          label: <strong>Collateral</strong>,
-          children: <CollateralTab transaction={transaction} />,
-        },
-        {
-          key: "reference_inputs",
-          label: <strong>InputRefs</strong>,
-          children: (
-            <>
-              <SectionTitle icon={<LinkIcon className="size-5" strokeWidth={2} />}>Reference Inputs</SectionTitle>
-              <UtxoList items={transaction.reference_inputs ?? []} emptyName="reference inputs" extended />
-            </>
-          ),
-        },
-        { key: "raw", label: <strong>Raw</strong>, children: <RawTab transaction={transaction} /> },
       ]}
     />
   )

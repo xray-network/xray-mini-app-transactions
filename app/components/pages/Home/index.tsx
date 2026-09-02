@@ -1,198 +1,21 @@
 import { useEffect, useState } from "react"
 import classNames from "classnames"
-import { Button, Col, Collapse, Row, Skeleton, Tag } from "antd"
-import {
-  ArrowDownIcon,
-  ArrowPathIcon,
-  ArrowUpIcon,
-  CircleStackIcon,
-  HashtagIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline"
+import { Button, Collapse, Skeleton } from "antd"
+import { ArrowDownIcon, ArrowPathIcon, ArrowUpIcon, PlusIcon } from "@heroicons/react/24/outline"
 import { providers } from "@xray-network/xray-js/cardano"
 import { cardanoV1, platformV1 } from "@xray-network/xray-js/mini-app-bridge/react"
 import Empty from "@/components/common/Empty"
 import Informers from "@/components/informers"
 import { fullTransactionExample } from "@/examples/fullTransaction"
 import { useEffectiveNetwork } from "@/integrations/xray-js/useEffectiveSettings"
-import type { CardanoTypes } from "@/types"
 import * as Utils from "@/utils"
 import * as UtilsTxKoios from "@/utils/txKoios"
 import TransactionDetails from "./TransactionDetails"
-import type { AddressTransactions, TransactionInfo, TransactionInfoList } from "./transactionTypes"
+import type { AddressTransactions, TransactionInfoList } from "./transactionTypes"
 import style from "./style.module.css"
 
 const exampleMode = import.meta.env.MODE === "example"
 const limit = 10
-
-const GeneralAndBlockInfo = ({
-  transaction,
-  network,
-  tipBlock,
-}: {
-  transaction: TransactionInfo
-  network: CardanoTypes.NetworkName | undefined
-  tipBlock: number
-}) => (
-  <Row gutter={24}>
-    <Col xs={24} sm={12}>
-      <div className="flex items-center mb-2">
-        <HashtagIcon className="size-5 me-2" strokeWidth={2} />
-        <strong>General Info</strong>
-      </div>
-      <div className="shared-box mb-3">
-        <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
-          <Informers.Breakdown
-            items={[
-              {
-                title: "Tx Hash",
-                children: (
-                  <Informers.Text value={Utils.truncate(transaction.tx_hash || "")} copy={transaction.tx_hash || ""} />
-                ),
-              },
-              {
-                title: "Tx Index",
-                children: (
-                  <Informers.Text
-                    value={Utils.quantityWithCommas(transaction.tx_block_index || "0")}
-                    copy={(transaction.tx_block_index || "0").toString()}
-                  />
-                ),
-              },
-              {
-                title: "TTL",
-                children: (
-                  <Informers.Text
-                    value={
-                      transaction.invalid_after && network
-                        ? new Date(
-                            Utils.slotToUnixTime(Number(transaction.invalid_after), network) || 0
-                          ).toLocaleString()
-                        : "—"
-                    }
-                    copy={
-                      transaction.invalid_after && network
-                        ? new Date(
-                            Utils.slotToUnixTime(Number(transaction.invalid_after), network) || 0
-                          ).toLocaleString()
-                        : undefined
-                    }
-                  />
-                ),
-              },
-              {
-                title: "Size (Bytes)",
-                children: (
-                  <Informers.Text
-                    value={Utils.quantityWithCommas(transaction.tx_size || "0")}
-                    copy={(transaction.tx_size || "0").toString()}
-                  />
-                ),
-              },
-              { title: "Total Output", children: <Informers.Ada value={transaction.total_output || "0"} /> },
-              { title: "Fee", children: <Informers.Ada value={transaction.fee || "0"} /> },
-            ]}
-          />
-        </div>
-      </div>
-    </Col>
-    <Col xs={24} sm={12}>
-      <div className="flex items-center mb-2">
-        <CircleStackIcon className="size-5 me-2" strokeWidth={2} />
-        <strong>Block Info</strong>
-      </div>
-      <div className="shared-box mb-3">
-        <div className="shared-box-inner bg-gray-100! dark:bg-gray-950!">
-          <Informers.Breakdown
-            items={[
-              {
-                title: "Block Hash",
-                children: (
-                  <Informers.Text
-                    value={Utils.truncate(transaction.block_hash || "")}
-                    copy={transaction.block_hash || ""}
-                  />
-                ),
-              },
-              {
-                title: "Block",
-                children: (
-                  <Informers.Text
-                    value={Utils.quantityWithCommas(transaction.block_height || "0")}
-                    copy={(transaction.block_height || "0").toString()}
-                  />
-                ),
-              },
-              {
-                title: "Epoch / Slot",
-                children: (
-                  <Informers.Text
-                    value={`${Utils.quantityWithCommas(transaction.epoch_no || "0")} / ${Utils.quantityWithCommas(transaction.epoch_slot || "0")}`}
-                    copy={`${transaction.epoch_no || "0"} / ${transaction.epoch_slot || "0"}`}
-                  />
-                ),
-              },
-              {
-                title: "Absolute Slot",
-                children: (
-                  <Informers.Text
-                    value={Utils.quantityWithCommas(transaction.absolute_slot || "0")}
-                    copy={(transaction.absolute_slot || "0").toString()}
-                  />
-                ),
-              },
-              {
-                title: "Timestamp",
-                children: (
-                  <Informers.Text
-                    value={
-                      transaction.tx_timestamp
-                        ? new Date(Number(transaction.tx_timestamp) * 1000).toLocaleString()
-                        : "—"
-                    }
-                    copy={
-                      transaction.tx_timestamp
-                        ? new Date(Number(transaction.tx_timestamp) * 1000).toLocaleString()
-                        : undefined
-                    }
-                  />
-                ),
-              },
-              {
-                title: "Confirmations",
-                children: (
-                  <Informers.Text
-                    value={
-                      <>
-                        {tipBlock <= 3 && (
-                          <Tag color="danger" className="font-size-12 me-2!">
-                            Low
-                          </Tag>
-                        )}
-                        {tipBlock > 3 && tipBlock <= 9 && (
-                          <Tag color="warning" className="font-size-12 me-2!">
-                            Medium
-                          </Tag>
-                        )}
-                        {tipBlock > 9 && (
-                          <Tag color="success" className="font-size-12 me-2!">
-                            High
-                          </Tag>
-                        )}
-                        {Utils.quantityWithCommas(tipBlock - (transaction.block_height || 0))}
-                      </>
-                    }
-                    copy={(tipBlock - (transaction.block_height || 0)).toString()}
-                  />
-                ),
-              },
-            ]}
-          />
-        </div>
-      </div>
-    </Col>
-  </Row>
-)
 
 export default function HomePage() {
   const effectiveNetwork = useEffectiveNetwork()
@@ -419,14 +242,11 @@ export default function HomePage() {
                     children: loadingInfo ? (
                       <Skeleton active paragraph={{ rows: 2 }} />
                     ) : (
-                      <>
-                        <GeneralAndBlockInfo
-                          transaction={transactionInfo}
-                          network={network}
-                          tipBlock={tip?.blockNo || 0}
-                        />
-                        <TransactionDetails transaction={transactionInfo} />
-                      </>
+                      <TransactionDetails
+                        transaction={transactionInfo}
+                        network={network}
+                        tipBlock={tip?.blockNo || 0}
+                      />
                     ),
                   }
                 })}

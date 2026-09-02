@@ -36,6 +36,10 @@
     @apply dark:text-white!;
   }
 
+  :global(.ant-collapse-body) {
+    @apply pt-0! pb-2!;
+  }
+
   :global(.ant-collapse-item) {
     @apply border-t-1! border-dashed border-gray-300 dark:border-gray-800! rounded-none!;
 
@@ -67,16 +71,26 @@
   }
 }
 
+.tabLabel {
+  @apply inline-flex items-center gap-1.5;
+
+  svg {
+    @apply shrink-0;
+  }
+}
+
 .dataGrid {
   @apply grid gap-3 mb-3;
 }
 
-.cardIndex,
-.itemIndex {
-  @apply text-xs font-bold text-gray-500 mb-2;
+.cardIndex {
+  @apply text-xs font-bold text-gray-500;
 }
 
-.structuredRecord,
+.jsonLabel {
+  @apply text-sm font-bold text-black dark:text-white;
+}
+
 .scalarValue {
   @apply min-w-0;
 }
@@ -85,31 +99,34 @@
   @apply max-w-80;
 }
 
-.nestedBlock,
 .utxoDetail {
-  @apply mt-3 pt-3 border-t border-dashed border-gray-300 dark:border-gray-700 min-w-0;
+  @apply mb-3 min-w-0;
 }
 
-.nestedTitle {
+.fieldTitle {
   @apply text-sm text-gray-500 font-bold mb-2;
-}
-
-.nestedList {
-  @apply grid gap-2 min-w-0;
-}
-
-.nestedItem {
-  @apply min-w-0 p-3 rounded-xl bg-white dark:bg-black border border-dashed border-gray-300 dark:border-gray-700;
 }
 
 .emptySection {
   @apply py-8 px-4 mb-3 rounded-2xl bg-gray-100 dark:bg-gray-950;
 }
 
-.rawToolbar {
-  @apply flex items-center justify-between gap-3 mb-3;
+.jsonCardInner {
+  @apply p-0! overflow-hidden;
 }
 
-.rawCode {
-  @apply m-0 p-3 max-h-120 overflow-auto rounded-xl bg-white dark:bg-black text-xs leading-5 whitespace-pre;
+.jsonToolbar {
+  @apply min-h-10 px-3 py-2 flex items-center justify-between gap-3 border-b border-gray-200 dark:border-gray-800;
+}
+
+.jsonToolbar > :only-child {
+  @apply ms-auto;
+}
+
+.jsonTextarea {
+  @apply block w-full min-h-52 resize-y border-0 rounded-none p-3 bg-gray-100 dark:bg-gray-950 text-xs leading-5 font-mono outline-none;
+}
+
+.rawTextarea {
+  @apply min-h-120 max-h-180;
 }

@@ -20,19 +20,24 @@ const limit = 10
 export default function HomePage() {
   const effectiveNetwork = useEffectiveNetwork()
   const bridgeTip = cardanoV1.useTip().data
-  const bridgeAccountState = cardanoV1.useAccountState().data
+  const account = cardanoV1.useAccountState()
+  const bridgeAccountState = account.data?.balanceStatus === "ready" ? account.data : null
   const status = platformV1.useStatus()
   const network = exampleMode ? fullTransactionExample.network : effectiveNetwork
   const tip = exampleMode ? fullTransactionExample.tip : bridgeTip
   const accountState = exampleMode ? fullTransactionExample.accountState : bridgeAccountState
   const standalone = typeof window !== "undefined" && window.parent === window
-  const emptyState = status.data?.account
-    ? { title: "Loading account", descr: "Cardano account data is not yet available" }
-    : status.data
-      ? { title: "No account selected", descr: "Select a Cardano account in XRAY App to access your information" }
-      : standalone
-        ? { title: "Standalone mode", descr: "Open this mini app inside XRAY App to access an account" }
-        : { title: "Host unavailable", descr: "XRAY App did not respond to the platform status request" }
+  const emptyState = standalone
+    ? { title: "Standalone mode", descr: "Open this mini app inside XRAY App to access an account" }
+    : status.error
+      ? { title: "Connection error", descr: "Could not load platform status from XRAY App" }
+      : !status.data
+        ? { title: "Connecting", descr: "Waiting for XRAY App" }
+        : !status.data.account
+          ? { title: "No account selected", descr: "Select a Cardano account in XRAY App to access your information" }
+          : account.error || account.data?.balanceStatus === "error"
+            ? { title: "Account unavailable", descr: "XRAY App could not load the selected account balance" }
+            : { title: "Loading account", descr: "Cardano account data is not yet available" }
   const [firstLoad, setFirstLoad] = useState(!exampleMode)
   const [koiosClient, setKoiosClient] = useState<ReturnType<typeof providers.koios.Client> | null>(null)
   const [loadingList, setLoadingList] = useState(false)

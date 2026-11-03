@@ -108,7 +108,7 @@ export default function HomePage() {
       return
     }
     if (network) {
-      setKoiosClient(providers.koios.Client(`https://graph.xray.app/output/services/koios/${network}/api/v1/`))
+      setKoiosClient(providers.koios.Client(`https://graph.xray.app/output/services/xray-koios/${network}-api-v1`))
     }
   }, [network])
 
